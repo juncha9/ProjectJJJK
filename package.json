@@ -1,0 +1,27 @@
+{
+  "name": "project_jjjk",
+  "version": "1.0.0",
+  "description": "movie streaming website",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/juncha9/ProjectJJJK.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/juncha9/ProjectJJJK/issues"
+  },
+  "homepage": "https://github.com/juncha9/ProjectJJJK#readme",
+  "dependencies": {
+    "body-parser": "*",
+    "cookie-parser": "*",
+    "ejs": "*",
+    "express": "*",
+    "express-session": "*",
+    "mysql": "*"
+  }
+}
