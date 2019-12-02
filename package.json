@@ -21,9 +21,8 @@
     "cookie-parser": "*",
     "ejs": "*",
     "express": "*",
+    "express-favicon": "*",
     "express-session": "*",
-    "jsonfile": "^5.0.0",
-    "mysql": "*",
-    "mysql2": "^2.0.1"
+    "mysql2": "*"
   }
 }

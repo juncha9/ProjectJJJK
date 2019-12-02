@@ -1,46 +1,24 @@
 //require
-var privateData = require("./private/data.json");
-var express = require("express");
-var ejs = require("ejs");
 
-var session = require("express-session")
-var db;
+const express = require("express");
+const favicon = require('express-favicon');
+const ejs = require("ejs");
+const session = require("express-session");
 
-async function Init()
-{
-    //DB 접속
-    db = await sqlPool.getConnection(async (conn) => conn);
-}
-
-async function SqlConnect()
-{
-    
-    //console.log(connection)
-    db.connect((err)=>
-    {
-        if(err)
-        {
-            console.error('Error on connect DB ' + err.stack);
-            return;
-        }
-        else
-        {
-            console.log("DB is connected");
-        }
-    });
-    
-
-}
- 
-SqlConnect();
+global.__base = __dirname;
+global.__routes = __dirname +'/routes';
+global.__modules = __dirname +'/modules';
+global.__views = __dirname + "/views";
+global.__private = __dirname +'/private';
+global.__public = __dirname + '/public' 
 
 var app = express();
-app.use(express.static(__dirname + '/public'));
+app.set('port',process.env.PORT || 3000);
+app.set('view engine','ejs');
+app.use(favicon(__public + '/favicon.png'));
+app.use(express.static(__public));
 
-
-var router = require("./router/controller") (app);
-
-
+var router = require(__routes+"/controller") (app);
 var server = app.listen(3000,function()
 {
     console.log("Server is started");

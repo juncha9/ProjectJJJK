@@ -7,15 +7,14 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 </head>
 <body>
-    <% for (var i=0; i<datas.length; i++ ) {%>
-        <%=datas[i].movie_name%>
-        <%=datas[i].movie_desc%>
-
-
-
+    영화 리스트
+    <% for(i = 0; i<records.length; i++){%>
+        <div>
+            <%= records[i].movie_name %>
+            <%= records[i].movie_director %>
+            <%= records[i].movie_desc %>
+            <%= records[i].release_date %>
+        </div>
     <% } %>
-
-
-
 </body>
 </html>
