@@ -2,23 +2,21 @@
 var privateData = require("./private/data.json");
 var express = require("express");
 var ejs = require("ejs");
-var mysql = require("mysql");
-var session = require("express-session")
 
-function SqlConnect()
+var session = require("express-session")
+var db;
+
+async function Init()
+{
+    //DB 접속
+    db = await sqlPool.getConnection(async (conn) => conn);
+}
+
+async function SqlConnect()
 {
     
-    connection = mysql.createConnection(
-        {
-            host : privateData.mysqlInfo.host,
-            user : privateData.mysqlInfo.user,
-            port : privateData.mysqlInfo.port,
-            password : privateData.mysqlInfo.password,
-            database : privateData.mysqlInfo.database
-        }
-    )
     //console.log(connection)
-    connection.connect((err)=>
+    db.connect((err)=>
     {
         if(err)
         {
@@ -41,6 +39,7 @@ app.use(express.static(__dirname + '/public'));
 
 
 var router = require("./router/controller") (app);
+
 
 var server = app.listen(3000,function()
 {

@@ -23,6 +23,7 @@
     "express": "*",
     "express-session": "*",
     "jsonfile": "^5.0.0",
-    "mysql": "*"
+    "mysql": "*",
+    "mysql2": "^2.0.1"
   }
 }
