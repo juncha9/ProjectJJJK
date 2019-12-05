@@ -2,20 +2,61 @@
 <%- include ('./common/topMenu'); -%>
 
 <script>
-   function test(){
-       alert($("#test").val());
-   }
-</script>
+    function test(){
+        alert($("#test").val());
+        console.log($("#ajaxGet").val());
+        $("#ajaxGet").val("test");
+    };
 
+    //onload
+    $(document).ready(function(){
+        $("#ajaxGet").click(function(){
+            $.ajax({
+                url: '/test/jQueryAjaxGet',
+                type:'get',
+                success: function(data) {
+                    alert(data);
+                },
+                error: function(err){
+                    alert(err);
+                }
+            });
+        });
+
+        $("#ajaxPost").click(function(){
+            $.ajax({
+                url: '/test/jQueryAjaxPost',
+                type:'post',
+                success: function(data) {
+                    alert(data);
+                },
+                error: function(err){
+                    alert(err);
+                }
+            });
+        });
+    });
+</script>
 <!-- 
     191205 현규
-    
+    Ajax추가, 확인
  -->
-
 <div>
-    <h4>템플릿 체크 중</h4>
-    <input type="text" id="test"/><input type="button" value="확인" onclick="test()">
-</div>
+    <div>
+        <h4>템플릿 체크 중</h4>
+        <input type="text" id="test"/><input type="button" value="확인" onclick="test()">
+        <input type="button" id="test2"/>
+    </div>
 
+    <div>
+        <h4>Ajax - get test</h4>
+        <input type="button" id="ajaxGet" value="get">
+    </div>
+
+    <div>
+        <h4>Ajax - post test</h4>
+        <input type="button" id="ajaxPost" value="post">
+    </div>
+</div>
 
 <%- include ('./common/footer'); -%>
