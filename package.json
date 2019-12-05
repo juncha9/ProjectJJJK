@@ -18,11 +18,14 @@
   "homepage": "https://github.com/juncha9/ProjectJJJK#readme",
   "dependencies": {
     "body-parser": "*",
+    "bootstrap": "^4.4.1",
     "cookie-parser": "*",
     "ejs": "*",
     "express": "*",
     "express-favicon": "*",
     "express-session": "*",
-    "mysql2": "*"
+    "jquery": "^3.4.1",
+    "mysql2": "*",
+    "path": "^0.12.7"
   }
 }

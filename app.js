@@ -10,7 +10,7 @@ global.__routes = __dirname +'/routes';
 global.__modules = __dirname +'/modules';
 global.__views = __dirname + "/views";
 global.__private = __dirname +'/private';
-global.__public = __dirname + '/public' 
+global.__public = __dirname + '/public';
 
 var app = express();
 app.set('port',process.env.PORT || 3000);
