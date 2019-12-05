@@ -7,8 +7,8 @@ module.exports = function(app)
         res.render("index.ejs");
     });
 
+    
     app.use('/movie_test', movie_test);
     //컨트롤러 분리
-
 }
 

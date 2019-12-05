@@ -1,0 +1,28 @@
+.topInfo{
+    clear:both;
+    float:left;
+    width:100%;
+}
+
+.topMenu{
+    clear:both;
+    border:1px solid #c6c6c6;
+    margin:0px;
+    padding:0px;
+    text-align:left;
+    overflow:hidden;
+}
+
+.topMenuBtn{
+    float:left;
+    padding:13px 10px 13px 10px;
+    cursor:pointer;
+    text-align:center;
+    min-width:80px;
+    font-size:17px;
+    color:#666666;
+}
+
+.topNavi{
+
+}

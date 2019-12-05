@@ -1,13 +1,21 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title></title>
-    <link href="/stylesheets/general.css" rel="stylesheet" type="text/css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-</head>
-<body>
-    <h1>환영합니다.</h1>
+<%- include ('./common/header'); -%>
+<%- include ('./common/topMenu'); -%>
 
-</body>
-</html>
+<script>
+   function test(){
+       alert($("#test").val());
+   }
+</script>
+
+<!-- 
+    191205 현규
+    
+ -->
+
+<div>
+    <h4>템플릿 체크 중</h4>
+    <input type="text" id="test"/><input type="button" value="확인" onclick="test()">
+</div>
+
+
+<%- include ('./common/footer'); -%>
