@@ -10,7 +10,6 @@ const express = require('express');
 const favicon = require('express-favicon');
 const ejs = require("ejs");
 const session = require("express-session");
-
 const private = require(__private);
 
 var app = express();
@@ -40,8 +39,6 @@ app.use((req,res,next)=>
 });
 
 var router = require(__routes+"/controller") (app);
-
-
 
 var server = app.listen(3000,function()
 {

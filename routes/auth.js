@@ -1,4 +1,4 @@
-const connector = require(__modules+'/connector');
+const db = require(__modules+'/database');
 const router = require('express').Router();
 const private = require(__private);
 router.get("/",(req,res)=>
@@ -47,7 +47,7 @@ router.post("/login",(req,res)=>{
             {
                 throw "Error : Necessary field is undefined on login";
             }
-            [records,fields] = await connector.query("SELECT user_seq, user_id, user_name, is_admin FROM user_info WHERE user_id=? AND user_pwd=password(?)",[userID,userPassword]);
+            [records,fields] = await db.query("SELECT user_seq, user_id, user_name, is_admin FROM user_info WHERE user_id=? AND user_pwd=password(?)",[userID,userPassword]);
             if(records && records.length > 0)
             {   
                 
@@ -80,7 +80,7 @@ router.post("/check_id",(req,res)=>{
 
         try
         {
-            [records,fields] = await connector.query("SELECT * FROM user_info WHERE user_id=?",[userID]);    
+            [records,fields] = await db.query("SELECT * FROM user_info WHERE user_id=?",[userID]);    
         }
         catch(err)
         {
@@ -116,7 +116,7 @@ router.post("/register",(req,res)=>
                 console.log(userName);
                 throw "Error : Necessary field is undefined on register";
             }
-            await connector.query("INSERT into user_info(user_id,user_pwd,user_name,user_mobile,user_email,insert_date) values(?,password(?),?,?,?,now());",
+            await db.query("INSERT into user_info(user_id,user_pwd,user_name,user_mobile,user_email,insert_date) values(?,password(?),?,?,?,now());",
             [userID, userPassword, userName, userMobile?userMobile:null, userEmail?userEmail:null ]);
             res.redirect("/");
         }
