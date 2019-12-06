@@ -23,6 +23,7 @@
     "express": "*",
     "express-favicon": "*",
     "express-session": "*",
+    "html": "*",
     "mysql2": "*"
   }
 }

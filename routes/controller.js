@@ -1,4 +1,6 @@
 var movie_test = require(__routes+"/movie_test");
+var auth = require(__routes+"/auth");
+
 
 module.exports = function(app)
 {
@@ -7,8 +9,10 @@ module.exports = function(app)
         res.render("index.ejs");
     });
 
-    app.use('/movie_test', movie_test);
     //컨트롤러 분리
+    app.use('/movie_test', movie_test);
+    
+    app.use('/auth',auth);
 
 }
 

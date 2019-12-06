@@ -1,13 +1,13 @@
-var privateData = require(__private+'/data.json');
-var mysql = require("mysql2/promise");
+const mysql = require("mysql2/promise");
+const private = require(__private);
 
 const sqlPool = mysql.createPool(
 {
-   host: privateData.mysqlInfo.host,
-   port: privateData.mysqlInfo.port,
-   user: privateData.mysqlInfo.user,
-   password: privateData.mysqlInfo.password,
-   database: privateData.mysqlInfo.database
+   host: private.mysqlInfo.host,
+   port: private.mysqlInfo.port,
+   user: private.mysqlInfo.user,
+   password: private.mysqlInfo.password,
+   database: private.mysqlInfo.database
 });
 
 module.exports = 
