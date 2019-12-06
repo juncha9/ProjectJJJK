@@ -1,18 +1,62 @@
-<!DOCTYPE html>
-<html>
+<%- include ('./common/header'); -%>
+<%- include ('./common/topMenu'); -%>
 
-<head>
-    <meta charset="UTF-8">
-    <title></title>
-    <link href="/stylesheets/general.css" rel="stylesheet" type="text/css">
+<script>
+    function test(){
+        alert($("#test").val());
+        console.log($("#ajaxGet").val());
+        $("#ajaxGet").val("test");
+    };
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-</head>
+    //onload
+    $(document).ready(function(){
+        $("#ajaxGet").click(function(){
+            $.ajax({
+                url: '/test/jQueryAjaxGet',
+                type:'get',
+                success: function(data) {
+                    alert(data);
+                },
+                error: function(err){
+                    alert(err);
+                }
+            });
+        });
 
-<body>
-    <%- include(__template+'/nav') %>
-    <h1>환영합니다.</h1>
+        $("#ajaxPost").click(function(){
+            $.ajax({
+                url: '/test/jQueryAjaxPost',
+                type:'post',
+                success: function(data) {
+                    alert(data);
+                },
+                error: function(err){
+                    alert(err);
+                }
+            });
+        });
+    });
+</script>
+<!-- 
+    191205 현규
+    Ajax추가, 확인
+ -->
+<div>
+    <div>
+        <h4>템플릿 체크 중</h4>
+        <input type="text" id="test"/><input type="button" value="확인" onclick="test()">
+        <input type="button" id="test2"/>
+    </div>
 
-</body>
+    <div>
+        <h4>Ajax - get test</h4>
+        <input type="button" id="ajaxGet" value="get">
+    </div>
 
-</html>
+    <div>
+        <h4>Ajax - post test</h4>
+        <input type="button" id="ajaxPost" value="post">
+    </div>
+</div>
+
+<%- include ('./common/footer'); -%>

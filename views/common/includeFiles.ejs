@@ -1,0 +1,18 @@
+<!-- 
+    191204 현규
+    소스가 지저분해질수있는 각종 include 파일들 여기서 관리하고
+    메인소스에는 이 파일 하나만 인클루드 시키면 됩니다.
+    css 혹은 plugin들을 이곳에서 include 또는
+    미리 npm install하셔도 됩니다.
+    세팅만 해주세요.
+-->
+<link href="/stylesheets/general.css" rel="stylesheet" type="text/css">
+<link href="/stylesheets/topMenu.css" rel="stylesheet" type="text/css">
+<!-- jquery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function(){
+        // 배열 전송을 위한 jquery 전역 설정
+        jQuery.ajaxSettings.traditional = true;
+    });
+</script>

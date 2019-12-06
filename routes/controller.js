@@ -14,5 +14,16 @@ module.exports = function(app)
     
     app.use('/auth',auth);
 
+    /**
+     * jQuery ajax 방식 테스트
+     */
+
+     app.get("/test/jQueryAjaxGet",(req,res) =>{
+        res.render("testGet.ejs");
+     });
+
+     app.post("/test/jQueryAjaxPost",(req,res) =>{
+        res.render("testPost.ejs");
+     });
 }
 
