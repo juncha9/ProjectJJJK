@@ -1,12 +1,47 @@
 <%- include ('./common/header'); -%>
 <%- include ('./common/topMenu'); -%>
+<link rel="stylesheet" href="/stylesheets/main.css" type="text/css">
 
 <script>
-    function test(){
-        alert($("#test").val());
-        console.log($("#ajaxGet").val());
-        $("#ajaxGet").val("test");
-    };
+    // function test(str){
+    //     if(str == null || str == ""){ alert ('검색어를 입력하세요.'); return;}
+
+    //     $.ajax({
+    //         //url: "/test/jQueryAjaxGet",
+    //         url:"/hidden/searchMovieForInsert",
+    //         type:"get",
+    //         data: {
+    //             query: str
+    //         },
+    //         dataType: "json",
+    //         success: function(data) {
+    //             //alert(data);
+    //             alert("검색완료");
+    //             console.log(JSON.stringify(data));
+    //             console.log(data.items);
+                
+    //             /**
+    //              * 20191209 현규
+    //              * 네이버 영화 api 연동
+    //              * 네이버 api에선 영화 검색밖에 지원을 안하네요
+    //              * 해당 정보를 직접 리스트에 뿌리기는 그렇고
+    //              */
+    //             // 네이버api통한 영화 검색시 필요로하는 정보는 items array안에 있습니다.
+    //             //
+    //             var div = $("#popularMovieList");
+    //             var ul = $("<ul style='display:flex; flex-direction: row; justify-content: space-around; padding:0px;'>").appendTo(div);
+    //             for(var i=0; i<data.items.length;i++){
+    //                 var li = $("<li>").appendTo(ul);
+    //                 $("<div>").html("<img src='"+data.items[i].image+"'>").appendTo(li);
+    //                 $("<div>").html(data.items[i].title).appendTo(li); 
+    // 	            $("<div>").html("평점 : "+data.items[i].userRating).appendTo(li); 
+    //             }
+    //         },
+    //         error: function(err){
+    //             alert(err);
+    //         }
+    //     });
+    // };
 
     //onload
     $(document).ready(function(){
@@ -35,27 +70,234 @@
                 }
             });
         });
+
+        /*191209 현규
+        바닐라 자바스크립트로 캐러셀 만들기
+        */
+        const SHOWING_CLASS ="showing";
+        const firstSlide = document.querySelector(".slider__item:first-child");
+        //firstSlide.addClass(SHOWING_CLASS);
+        function slide(){
+            const currentSlide = document.querySelector(`.${SHOWING_CLASS}`);
+            //console.log(currentSlide);
+            if(currentSlide){
+                currentSlide.classList.remove(SHOWING_CLASS);
+                const nextSlide = currentSlide.nextElementSibling;
+                if(nextSlide){
+                    nextSlide.classList.add(SHOWING_CLASS);
+                }else{
+                    firstSlide.classList.add(SHOWING_CLASS);
+                }
+            }else{
+                firstSlide.classList.add(SHOWING_CLASS);
+            }
+        }
+        slide();
+        setInterval(slide, 2000); //자동스크롤
     });
+
 </script>
 <!-- 
     191205 현규
     Ajax추가, 확인
  -->
-<div>
-    <div>
-        <h4>템플릿 체크 중</h4>
-        <input type="text" id="test"/><input type="button" value="확인" onclick="test()">
-        <input type="button" id="test2"/>
+ <div id="movieSliderContainer">
+    <div class="slider">
+        <ul style="display:flex; flex-direction: row; justify-content: space-around; padding:0px;">
+            <li class="slider__item">
+                <div><img src="http://img.movist.com/?img=/x00/05/13/60_p1.jpg" style="width: 200px;"></div>
+                <div>겨울왕국2</div>
+                <div>평점1</div>
+                <div>가격</div>
+            </li>
+            <li class="slider__item">
+                <div><img src="http://img.movist.com/?img=/x00/05/13/60_p1.jpg" style="width: 200px;"></div>
+                <div>겨울왕국2</div>
+                <div>평점2</div>
+                <div>가격</div>
+            </li>
+            <li class="slider__item">
+                <div><img src="http://img.movist.com/?img=/x00/05/13/60_p1.jpg" style="width: 200px;"></div>
+                <div>겨울왕국2</div>
+                <div>평점3</div>
+                <div>가격</div>
+            </li>
+            <li class="slider__item">
+                <div><img src="http://img.movist.com/?img=/x00/05/13/60_p1.jpg" style="width: 200px;"></div>
+                <div>겨울왕국2</div>
+                <div>평점4</div>
+                <div>가격</div>
+            </li>
+            <li class="slider__item">
+                <div><img src="http://img.movist.com/?img=/x00/05/13/60_p1.jpg" style="width: 200px;"></div>
+                <div>겨울왕국2</div>
+                <div>평점5</div>
+                <div>가격</div>
+            </li>
+        </ul>
+    </div>
+</div>
+<div id="contentsContainer">
+
+    <div id="movieContainer">
+        <!-- 1. 인기영화 -->
+        <!--
+            1) 좌우로 스크롤 
+            2) 썸네일 + 하단 제목 + 평점 + 가격
+            3) 클릭시 상세
+            4) ajax from movie_info
+                select movie_seq, movie_name from movie_info where streaming_cnt desc
+            5) 평점 -> select count(*) from moive_reply_info where movie_seq = #{currentMovieSeq}
+            6) count(*) != 0 then select avg(movie_rating) from movie_reply_info
+            7) 정리
+            select A.movie_seq, A.movie_name, B.movie_rating
+            from
+                movie_info as A
+                join movie_reply_info as B
+                    on A.movie_seq = B.movie_seq
+            where ?
+            order by
+                A.streaming_cnt desc;
+        -->
+        <div class="popular">
+            <div class="contents">
+                <div class="boxTitle">인기영화</div>
+                <div class="box" id="popularMovieList">
+                    <!-- <ul style="display:flex; flex-direction: row; justify-content: space-around; padding:0px;">
+                        <li>
+                            <p>이미지</p>
+                            <p>제목</p>
+                            <p>평점</p>
+                            <p>가격</p>
+                        </li>
+                        <li>
+                            <p>이미지</p>
+                            <p>제목</p>
+                            <p>평점</p>
+                            <p>가격</p>
+                        </li>
+                        <li>
+                            <p>이미지</p>
+                            <p>제목</p>
+                            <p>평점</p>
+                            <p>가격</p>
+                        </li>
+                        <li>
+                            <p>이미지</p>
+                            <p>제목</p>
+                            <p>평점</p>
+                            <p>가격</p>
+                        </li>
+                        <li>
+                            <p>이미지</p>
+                            <p>제목</p>
+                            <p>평점</p>
+                            <p>가격</p>
+                        </li>
+                    </ul> -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. 최신영화 -->
+        <!-- 
+            1) 그리드 방식
+            2) 썸네일 + 하단 제목 + 평점 + 가격
+            3) 좀 더 작은 사이즈로 배치
+            4) 클릭시 상세
+        -->
+        <div id="latestMovieList" class="latest">
+            <div class="contents">
+                <div class="boxTitle">최신영화</div>
+                <div class="box">
+                    <ul style="display:flex; flex-direction: row; justify-content: space-around; padding:0px;">
+                        <li>
+                            <p>이미지</p>
+                            <p>제목</p>
+                            <p>평점</p>
+                            <p>가격</p>
+                        </li>
+                        <li>
+                            <p>이미지</p>
+                            <p>제목</p>
+                            <p>평점</p>
+                            <p>가격</p>
+                        </li>
+                        <li>
+                            <p>이미지</p>
+                            <p>제목</p>
+                            <p>평점</p>
+                            <p>가격</p>
+                        </li>
+                        <li>
+                            <p>이미지</p>
+                            <p>제목</p>
+                            <p>평점</p>
+                            <p>가격</p>
+                        </li>
+                        <li>
+                            <p>이미지</p>
+                            <p>제목</p>
+                            <p>평점</p>
+                            <p>가격</p>
+                        </li>
+                    </ul>
+                </div>
+            </div> 
+        </div>
+        <!-- 3. 할인영화 or 추천영화 -->
+        <!-- ? 레이아웃 고민해볼것
+            1)사용자 라이브러리 테이블에서 로그인한 사람 시퀀스로
+            사용자가 본 영화 라이브러리 뽑기
+            select * from user_library where user_seq = #{userSeq} order by insert_date desc; 최근본순서로
+
+            2)라이브러리에서 선호하는 장르 뽑기
+            select count(distinct movie_genre) from movie_info;
+
+        -->
+        <div id="recommandMovieList" class="recommand">
+            <div class="contents">
+                <div class="boxTitle">인기 예고편</div>
+                <div class="box">
+                    <ul style="display:flex; flex-direction: row; justify-content: space-around; padding:0px; list-style-type: none;">
+                        <!-- <li>
+                            <div>
+                                <iframe width="300" height="200" src="https://www.youtube.com/embed/9Dfkx9vEPw0" frameborder="0"></iframe>
+                                <a href="#" style="display:block">블랙위도우</a>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                            <iframe width="300" height="200" src="https://www.youtube.com/embed/FKAbTcss1ow" frameborder="0"></iframe>
+                            <a href="#" style="display:block">블랙위도우</a>
+                        </div>
+                        </li>
+                        <li>
+                            <div>
+                            <iframe width="300" height="200" src="https://www.youtube.com/embed/FX-XQpeilms" frameborder="0"></iframe>
+                            <a href="#" style="display:block">블랙위도우</a>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                            <iframe width="300" height="200" src="https://www.youtube.com/embed/x60mB0zXZ38" frameborder="0" ></iframe>
+                            <a href="#" style="display:block">블랙위도우</a>
+                        </div>
+                        </li>
+                        <li>
+                            <div>
+                            <iframe width="300" height="200" src="https://www.youtube.com/embed/jDirUVKQbSE" frameborder="0"></iframe>
+                            <a href="#" style="display:block">블랙위도우</a>
+                            </div>
+                        </li> -->
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div>
-        <h4>Ajax - get test</h4>
-        <input type="button" id="ajaxGet" value="get">
-    </div>
-
-    <div>
-        <h4>Ajax - post test</h4>
-        <input type="button" id="ajaxPost" value="post">
+    <div id="userInfo">
+        <!-- 사용자 정보 ? -->
     </div>
 </div>
 

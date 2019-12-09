@@ -1,0 +1,104 @@
+<%- include ('./common/header'); -%>
+<%- include ('./common/topMenu'); -%>
+
+<!-- 
+    20191209 현규
+    해당페이지는 네이버 api검색을 통하여
+    자동으로 저희 DB에 검색한 영화를 넣어주도록 하는 동작을
+    위해 제작한 페이지입니다.
+-->
+
+<!-- 
+    원래는 이런식으로 function call하면 안되는데
+    시간관계상 데이터 떄려넣기 용으로 씁니다...
+ -->
+
+<script>
+    function searchMovie(str){
+        if(str == null || str == ""){ alert ('검색어를 입력하세요.'); return;}
+
+        $.ajax({
+            url: "/hidden/searchMovieForInsert",
+            type:"get",
+            async: true,
+            data: {
+                query: str
+            },
+            dataType: "json",
+            success: function(data) {
+                //alert(data);
+                alert("검색완료");
+                console.log(JSON.stringify(data));
+                console.log(data.items);
+                //console.log(typeof(data));
+                //var itemList = data.items;
+                
+                var div = $("#searchResult");
+                var ul = $("<ul style='display:flex; flex-direction: row; justify-content: space-around; padding:0px;'>").appendTo(div);
+                for(var i=0; i<data.items.length;i++){
+                    var li = $("<li>").appendTo(ul);
+                    $("<div>").html("<img src='"+data.items[i].image+"'>").appendTo(li);
+                    $("<div>").html(data.items[i].title).appendTo(li); 
+                    $("<div>").html("감독 : "+data.items[i].director).appendTo(li);
+                    $("<div>").html("개봉일 : "+data.items[i].pubDate).appendTo(li);
+    	            $("<div>").html("평점 : "+data.items[i].userRating).appendTo(li); 
+                }
+                
+
+                //console.log(itemList);
+                //제목 : title
+                //영문제목 : subtitle
+                //포스터 : image
+                //네이버 링크 : link
+                //개봉일 : pubDate
+                //감독 : director
+                //배우 : actor
+                //평점 : userRating
+                for(var i=0; i<data.items.length;i++){
+                    // var param = {
+                    //     movieName: ((data.items[i].title).replace("<b>","")).replace("</b>",""),
+                    //     movieDirector: data.items[i].director,
+                    //     imageUrl: data.items[i].image,
+                    //     releaseDate: data.items[i].pubDate,
+                    //     userRating: data.items[i].userRating
+                    // }
+                    
+                    //console.log(param);
+                    insertMovie(data.items[i]);
+                }
+            },
+            error: function(err){
+                alert(err);
+            }
+        });
+    };
+
+    //검색한 영화 db에 insert
+    function insertMovie(param){
+        $.ajax({
+            url:"/hidden/insertMovie",
+            type:"get",
+            async: true,
+            data: param,
+            success: function(data){
+                console.log("성공");
+            },
+            error: function(err){
+                console.log("에러 : "+err);
+            }
+        });
+    };
+</script>
+
+<div id="searchForm">
+    <div>
+        <input type="text" id="searching" value="">
+        <input type="button" onclick="searchMovie($('#searching').val())" value="검색">
+        <!-- <input type="button" onclick="searchMovie($('#searching').val())" value="디비삽입"> -->
+    </div>
+</div>
+<div id="searchResult">
+
+</div>
+
+<%- include ('./common/footer'); -%>
