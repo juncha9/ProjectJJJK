@@ -1,6 +1,5 @@
 const connector = require(__modules+'/connector');
 const router = require('express').Router();
-const private = require(__private);
 router.get("/",(req,res)=>
 {
     if(req.query.mode === 'login')
@@ -127,5 +126,6 @@ router.post("/register",(req,res)=>
         }
     }();
 });
+
 
 module.exports = router;

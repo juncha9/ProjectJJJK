@@ -1,6 +1,6 @@
 var movie_test = require(__routes+"/movie_test");
 var auth = require(__routes+"/auth");
-
+var movie = require(__routes+"/movie");
 
 module.exports = function(app)
 {
@@ -13,6 +13,8 @@ module.exports = function(app)
     app.use('/movie_test', movie_test);
     
     app.use('/auth',auth);
+
+    app.use('movie',movie);
 
     /**
      * jQuery ajax 방식 테스트

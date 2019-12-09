@@ -1,28 +1,53 @@
-.topInfo{
-    clear:both;
-    float:left;
-    width:100%;
+.topMenuContainer {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+
+
 }
 
-.topMenu{
-    clear:both;
-    border:1px solid #c6c6c6;
-    margin:0px;
-    padding:0px;
-    text-align:left;
-    overflow:hidden;
+.topInfo {
+    clear: both;
+    float: left;
+    width: 100%;
 }
 
-.topMenuBtn{
-    float:left;
-    padding:13px 10px 13px 10px;
-    cursor:pointer;
-    text-align:center;
-    min-width:80px;
-    font-size:17px;
-    color:#666666;
+.topMenu {
+    display: flex;
+    justify-content: space-around;
+    clear: both;
+    border-top: 2px solid rgba(255, 0, 0, 0.5);
+    border-bottom: 2px solid rgba(255, 0, 0, 0.5);
+    margin: 0px;
+    padding: 0px;
+    text-align: left;
+    overflow: hidden;
 }
 
-.topNavi{
+.topMenuBtn {
+    float: left;
+    padding: 13px 10px 13px 10px;
+    cursor: pointer;
+    text-align: center;
+    min-width: 80px;
+    font-size: 17px;
+    color: #666666;
+}
 
+.nav-bar {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.nav-btn {
+    padding: 5px 15px;
+    height: 30px;
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+    border-radius: 5px 5px;
+    color: #333;
+    background: #FFFAFA;
+    border: 1px solid rgba(255, 0, 0, 0.5);
 }
