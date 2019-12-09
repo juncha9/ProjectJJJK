@@ -1,4 +1,7 @@
 
+<%- include ('./common/header'); -%>
+<%- include ('./common/topMenu'); -%>
+
 <link href="/stylesheets/auth.css" rel="stylesheet" type="text/css">
 <form class="auth-form" action="/auth/register" method="POST" accept-charset="UTF-8" onsubmit="return OnSubmit()">
     <div class="auth-head">
@@ -101,3 +104,4 @@ function CheckID() {
         });
 };
 </script>
+<%- include ('./common/footer'); -%>

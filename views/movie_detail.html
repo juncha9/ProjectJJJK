@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="utf-8" />
+    <title>상세페이지</title>
+    <link href="./../public/stylesheets/reset.css" rel="stylesheet" type="text/css">
+    <link href="./../public/stylesheets/movie_list.css" rel="stylesheet" type="text/css">
+
+
+    <script src="//ajax.googleapis.com/ajax/libs/webfont/1.4.10/webfont.js"></script>
+    <script type="text/javascript">
+        WebFont.load({
+            // For google fonts
+            google: {
+                families: ['Noto Sans', 'Noto Sans KR', 'Nanum Myeongjo', 'Nanum Pen Script']
+            }
+        });
+    </script>
+</head>
+
+<body>
+    <div id="wrap">
+        <div id="view">
+            <div class="poster"><img src="" alt="포스터"></div>
+            <div class="m_name">영화제목</div>
+            <div class="m_director">감독</div>
+            <div class="m_genre">장르</div>
+            <div class="m_grade">평점</div>
+            <div class="m_desc"><b>줄거리</b><br>줄거리입니다~~~</div>
+        </div>
+        <div id="reply">
+            <div>REVIEW 작성</div>
+            <div><input class="r_grade">/ 5.0</div>
+            <textarea class="replyBox"></textarea>
+            <button class="btnReview">등록</button><br><br>
+        </div>
+    </div>
+</body>
+
+</html>
