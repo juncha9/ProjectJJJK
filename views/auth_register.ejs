@@ -1,0 +1,110 @@
+<%- include ('./common/header'); -%>
+<%- include ('./common/topMenu'); -%>
+<%- include('./common/nav') %>
+<link href="stylesheets/auth.css" rel="stylesheet" type="text/css">
+<form class="auth-form" action="/auth/register" method="POST" accept-charset="UTF-8" onsubmit="return OnSubmit()">
+    <div class="auth-head">
+        <p id="title" class="h5">회원가입</p>
+    </div>
+    <div class="auth-detail">
+        <div class="form-group">
+            <label for="input-id">ID</label>
+            <div class="input-group">
+                <input class="form-control" id="input-id" name="userID" type="text" aria-describedby="require" placeholder="ID" is-checked=false onchange="OnIDChange()" required />
+                <div class="input-group-append">
+                    <span>
+                        <button class="btn btn-danger" type="button" id="btn-check-id" onclick="CheckID()">체크</button>
+                        <button class="btn btn-success" type="button" id="btn-check-id-success" style="display: none;" disabled>성공</button>
+                    </span>
+                </div>
+            </div>
+            <small id="require" class="form-text text-muted">필수 입력입니다.</small>
+        </div>
+        <div class="form-group">
+            <label for="input-password">비밀번호</label>
+            <input class="form-control" id="input-password" name="userPassword" type="password" aria-describedby="require" placeholder="비밀번호" required>
+            <small id="require" class="form-text text-muted">필수 입력입니다.</small>
+        </div>
+        <div class="form-group">
+            <label for="input-password2">비밀번호 확인 </label>
+            <input class="form-control" id="input-password2" name="userPassword2" type="password" aria-describedby="require" placeholder="비밀번호" required>
+            <small id="require" class="form-text text-muted">필수 입력입니다.</small>
+        </div>
+        <div class="form-group">
+            <label for="input-name">이름</label>
+            <input class="form-control" id="input-name" name="userName" type="text" aria-describedby="require" placeholder="이름" required>
+            <small id="require" class="form-text text-muted">필수 입력입니다.</small>
+        </div>
+        <div class="form-group">
+            <label for="input-mobile">연락처</label>
+            <input class="form-control" id="input-mobile" name="userMobile" type="text" aria-describedby="require" placeholder="연락처">
+        </div>
+        <div class="form-group">
+            <label for="input-email">이메일</label>
+            <input class="form-control" id="input-email" name="userEmail" type="text" aria-describedby="require" placeholder="이메일">
+        </div>
+    </div>
+    <div class="auth-foot">
+        <button type="submit" class="btn btn-primary" >가입</button>
+    </div>
+</form>
+
+</div>
+<script src='http://code.jquery.com/jquery-latest.js'></script>
+<script>
+function OnIDChange() {
+    //아이디 변경시
+    $('#input-id').attr('is-checked', false);
+    $('#btn-check-id').show();
+    $('#btn-check-id-success').hide(); //성공 이미지 숨김
+};    
+function OnSubmit()
+{
+    if($('#input-id').attr('is-checked') === 'false')
+    {
+        alert('아이디 중복확인을 해주세요');
+        return false;
+    }
+    if($('#input-password').val() != $('#input-password2').val())
+    {
+        alert('비밀번호가 서로 다릅니다.');
+        return false;
+    }
+};
+
+function CheckID() {
+    if ($('#input-id').val() == '') {
+        alert('아이디를 입력해주세요.')
+        return;
+    }
+    var user_id = $('#input-id').val();
+    $.ajax({
+            url: '/auth/check_id',
+            method: 'POST',
+            async: true,
+            data: {
+                user_id: user_id
+            },
+            dataType: 'json',
+        })
+        .done(
+            function(res) {
+                if (res.result == true) {
+                    $('#input-id').attr('is-checked', true);
+                    $('#btn-check-id').hide(); 
+                    $('#btn-check-id-success').show(); //성공 이미지 보여줌
+                } 
+                else
+                {
+                    alert('아이디가 중복됩니다');
+                }
+            })
+        .fail(
+            function(error) {
+                alert('error : ' + error);
+            });
+
+};
+
+</script>
+<%- include ('./common/footer'); -%>

@@ -11,17 +11,40 @@ module.exports = function(app)
    app.use(bodyParser.json());
    app.use(bodyParser.urlencoded({extended:true}));
 
-    app.get("/",(req,res)=>
-    {
-        res.render("index.ejs");
-    });
+   app.get("/",(req,res)=>{
+      res.render("index.ejs");
+   });
 
-    app.use('/movie_test', movie_test);
-    //컨트롤러 분리 
+   app.use('/movie_test', movie_test);
+   //컨트롤러 분리
 
-    app.get("/insertMovie",(req,res)=>{
-       res.render("insertMovie.ejs");
-    });
+   app.get("/movie/getPopularMovieList", (req,res) => {
+      db.query("select * from movie_info where release_date = 2019 order by user_rating desc limit 0,5;", function(err, result){
+         if(err){
+            console.log(err);
+            res.send(err);
+         }else{
+            console.log(result);
+            res.send(result);
+         }
+      });
+   });
+
+   app.get("/movie/getLatestMovieList",(req,res) => {
+      db.query("select * from movie_info where movie_seq in(13,57,69,67,70);", function(err, result){
+         if(err){
+            console.log(err);
+            res.send(err);
+         }else{
+            console.log(result);
+            res.send(result);
+         }
+      });
+   });
+
+   app.get("/insertMovie",(req,res)=>{
+      res.render("insertMovie.ejs");
+   });
 
    //20191209 현규
    //히든페이지에서 영화 검색시 디비로 자동 삽입...
@@ -67,5 +90,34 @@ module.exports = function(app)
       console.log(res);
       res.end();
    });
+
+   app.post("/getMovieView", (req,res) => {
+      //console.log(req.body.movieSeq);
+      //디비에서 해당 seq 영화정보 가져오기
+      db.query("select * from movie_info where movie_seq = "+req.body.movieSeq+";", function(err, result){
+         if(err){
+            console.log(err);
+            res.send(err);
+         }else{
+            console.log(result);
+            //res.render("movieView",{movieTitle : result.movie_title});
+            //res.send(result);
+            res.render("movieView", {
+               movieImage:    result[0].image_url,
+               movieTitle:    result[0].movie_title,
+               movieDirector: result[0].movie_director,
+               movieDesc:     result[0].movie_desc,
+               userRating:    result[0].user_rating,
+               releaseDate:   result[0].release_date,
+               streamingCnt:  result[0].streaming_cnt    
+            });
+         }
+      });
+   });
+
+   // app.get("/movieView", (req,res) => {
+   //    console.log("하이");
+   //    res.render("movieView.ejs");
+   // });
 }
 

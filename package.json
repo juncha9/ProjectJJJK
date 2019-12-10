@@ -24,7 +24,7 @@
     "express": "*",
     "express-favicon": "*",
     "express-session": "*",
-    "jquery": "^3.4.1",
+    "html": "*",
     "mysql2": "*",
     "path": "^0.12.7",
     "request": "^2.88.0"

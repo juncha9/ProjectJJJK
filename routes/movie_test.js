@@ -1,6 +1,6 @@
 var bodyParser = require("body-parser");
 var urlencodedParser = bodyParser.urlencoded({extended:false});
-var db = require(__modules+'/database');
+const db = require(__modules+'/database');
 var router = require('express').Router();
 
 /*

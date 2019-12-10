@@ -1,0 +1,63 @@
+<!--
+    네비게이션 바
+    191206 새결
+-->
+<link href="stylesheets/nav.css" rel="stylesheet" type="text/css">
+<div class="nav-bar">
+    <a href="/">
+        <div id="nav-btn-home" class="nav-btn">
+            홈
+        </div>
+    </a>
+    <a href="">
+        <div id="nav-btn-library" class="nav-btn">
+            라이브러리
+        </div>
+    </a>
+    <a href="/auth?mode=me">
+        <div id="nav-btn-me" class="nav-btn">
+            <%= session.isLogin?session.userID:null %>
+        </div>
+    </a>
+    <a href="/auth?mode=logout">
+        <div id="nav-btn-logout" class="nav-btn">
+            로그아웃
+        </div>
+    </a>
+    <a href="/auth?mode=login">
+        <div id="nav-btn-login" class="nav-btn">
+            로그인
+        </div>
+    </a>
+    <a href="/auth?mode=register">
+        <div id="nav-btn-register" class="nav-btn">
+            회원가입
+        </div>
+    </a>
+    <a href="">
+        <div id="nav-btn-board" class="nav-btn">
+            게시판
+        </div>
+    </a>
+    
+</div>
+<script src='http://code.jquery.com/jquery-latest.js'></script>
+<script type="text/javascript">
+    var isLogin = "<%= session.isLogin?session.isLogin:null %>";
+    if(isLogin === "true") 
+    {
+        $('#nav-btn-library').show();
+        $('#nav-btn-me').show();
+        $('#nav-btn_logout').show();
+        $('#nav-btn-login').hide();
+        $('#nav-btn-register').hide();  
+    }
+    else
+    {
+        $('#nav-btn-library').hide();
+        $('#nav-btn-me').hide();
+        $('#nav-btn-logout').hide();
+        $('#nav-btn-login').show();
+        $('#nav-btn-register').show();  
+    }
+</script>
