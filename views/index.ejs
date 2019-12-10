@@ -71,17 +71,6 @@
             success: function(data) {
                 var div = $("#movieCarouselContainer");
                 div.addClass("slider");
-                //div.addClass("gallery");
-                //var div2 = $("<div>").addClass("gallery").appendTo(div);
-                // var ul = $("<ul>").addClass("clearfix").appendTo(div);
-                // console.log(data);
-                // console.log(data.length);
-                // for(var i=0; i<data.length;i++){
-                //     var li = $("<li>").addClass("slide_item").bind("click",data[i].movie_seq,function(e){goView(e.data)}).appendTo(ul);
-                //     $("<div>").html("<img src='"+data[i].image_url+"'>").appendTo(li);
-                //     $("<div>").html(data[i].movie_title).appendTo(li); 
-    	        //     $("<div>").html("평점 : "+data[i].user_rating).appendTo(li); 
-                // }
                 var ul = $("<ul style='display:flex; flex-direction: row; justify-content: space-around; padding:0px;'>").appendTo(div);
                 for(var i=0; i<data.length;i++){
                     var li = $("<li>").addClass("slider__item").bind("click",data[i].movie_seq,function(e){goView(e.data)}).appendTo(ul);
@@ -104,25 +93,16 @@
             dataType: "json",
             success: function(data) {
                 var div = $("#popularMovieList");
-                //div.addClass("gallery");
-                //var div2 = $("<div>").addClass("gallery").appendTo(div);
-                // var ul = $("<ul>").addClass("clearfix").appendTo(div);
-                // console.log(data);
-                // console.log(data.length);
-                // for(var i=0; i<data.length;i++){
-                //     var li = $("<li>").addClass("slide_item").bind("click",data[i].movie_seq,function(e){goView(e.data)}).appendTo(ul);
-                //     $("<div>").html("<img src='"+data[i].image_url+"'>").appendTo(li);
-                //     $("<div>").html(data[i].movie_title).appendTo(li); 
-    	        //     $("<div>").html("평점 : "+data[i].user_rating).appendTo(li); 
-                // }
                 var ul = $("<ul style='display:flex; flex-direction: row; justify-content: space-around; padding:0px;'>").appendTo(div);
                 console.log(data);
                 console.log(data.length);
                 for(var i=0; i<data.length;i++){
                     var li = $("<li>").bind("click",data[i].movie_seq,function(e){goView(e.data)}).appendTo(ul);
-                    $("<div>").html("<img src='"+data[i].image_url+"'>").appendTo(li);
-                    $("<div>").html(data[i].movie_title).appendTo(li); 
-    	            $("<div>").html("평점 : "+data[i].user_rating).appendTo(li); 
+                    var div = $("<div style='text-align:center;'>").appendTo(li);
+                    $("<div>").html("<img src='"+data[i].image_url+"'>").appendTo(div);
+                    $("<div>").html(data[i].movie_title).appendTo(div); 
+                    //$("<div>").addClass("star_score").html("<span class='st_off'><span class='st_on' style='width:"+(data[i].user_rating)*10+"%'></span></span>").appendTo(li);
+                    $("<div style='color:red'>").html("<img src='star_on.png' style='height:25px; margin-bottom:3px;'> "+data[i].user_rating).appendTo(div);
                 }
             },
             error: function(err){
@@ -144,9 +124,10 @@
                 console.log(data.length);
                 for(var i=0; i<data.length;i++){
                     var li = $("<li>").bind("click",data[i].movie_seq,function(e){goView(e.data)}).appendTo(ul);
-                    $("<div>").html("<img src='"+data[i].image_url+"'>").appendTo(li);
-                    $("<div>").html(data[i].movie_title).appendTo(li); 
-    	            $("<div>").html("평점 : "+data[i].user_rating).appendTo(li); 
+                    var div = $("<div style='text-align:center;'>").appendTo(li);
+                    $("<div>").html("<img src='"+data[i].image_url+"'>").appendTo(div);
+                    $("<div>").html(data[i].movie_title).appendTo(div); 
+                    $("<div style='color:red'>").html("<img src='star_on.png' style='height:25px; margin-bottom:3px;'> "+data[i].user_rating).appendTo(div);
                 }
             },
             error: function(err){
@@ -185,127 +166,123 @@
     191205 현규
     Ajax추가, 확인
  -->
- <div id="movieCarouselContainer">
-    <div class="slider">
-        <ul style="display:flex; flex-direction: row; justify-content: space-around; padding:0px;">
-            <li class="slider__item">
-                <div><img src="http://img.movist.com/?img=/x00/05/13/60_p1.jpg" style="width: 200px;"></div>
-                <div>겨울왕국2</div>
-                <div>평점1</div>
-                <div>가격</div>
-            </li>
-            <li class="slider__item">
-                <div><img src="http://img1.daumcdn.net/thumb/C180x260/?fname=http://t1.daumcdn.net/movie/6651521f62d94a5d8b8ceae8aebcb9501575422460657" style="width: 200px;"></div>
-                <div>포드 V 페라리</div>
-                <div>평점2</div>
-                <div>가격</div>
-            </li>
-            <li class="slider__item">
-                <div><img src="http://img1.daumcdn.net/thumb/C180x260/?fname=http://t1.daumcdn.net/movie/21bd40df541c43bbbd6a8058e21bacce1574236016658" style="width: 200px;"></div>
-                <div>나이브스 아웃</div>
-                <div>평점3</div>
-                <div>가격</div>
-            </li>
-            <li class="slider__item">
-                <div><img src="//img1.daumcdn.net/thumb/C180x260/?fname=http://t1.daumcdn.net/movie/71b16e5b50b0466ab72437fb9103e8b11575506912753" style="width: 200px;"></div>
-                <div>감쪽같은 그녀</div>
-                <div>평점4</div>
-                <div>가격</div>
-            </li>
-            <li class="slider__item">
-                <div><img src="//img1.daumcdn.net/thumb/C180x260/?fname=http://t1.daumcdn.net/movie/10291d6cc5f04385aec91eec026ccbb51572916944250" style="width: 200px;"></div>
-                <div>라스트 크리스마스</div>
-                <div>평점5</div>
-                <div>가격</div>
-            </li>
-            <li class="slider__item">
+<div id="middleContainer">
+    <div id="movieCarouselContainer" style="margin-top: 40px;">
+        <div class="slider">
+            <ul style="display:flex; flex-direction: row; justify-content: space-around; padding:0px;">
+                <li class="slider__item">
+                    <div><img src="http://img.movist.com/?img=/x00/05/13/60_p1.jpg" style="width: 200px;"></div>
+                    <div>겨울왕국2</div>
+                    <div style="color:red"><img src="star_on.png" style="height:30px; margin-bottom:3px;">9</div>
+                </li>
+                <li class="slider__item">
+                    <div><img src="http://img1.daumcdn.net/thumb/C180x260/?fname=http://t1.daumcdn.net/movie/6651521f62d94a5d8b8ceae8aebcb9501575422460657" style="width: 200px;"></div>
+                    <div>포드 V 페라리</div>
+                    <div style="color:red"><img src="star_on.png" style="height:30px; margin-bottom:3px;">9.57</div>
+                </li>
+                <li class="slider__item">
+                    <div><img src="http://img1.daumcdn.net/thumb/C180x260/?fname=http://t1.daumcdn.net/movie/21bd40df541c43bbbd6a8058e21bacce1574236016658" style="width: 200px;"></div>
+                    <div>나이브스 아웃</div>
+                    <div style="color:red"><img src="star_on.png" style="height:30px; margin-bottom:3px;">8.3</div>
+                </li>
+                <li class="slider__item">
+                    <div><img src="//img1.daumcdn.net/thumb/C180x260/?fname=http://t1.daumcdn.net/movie/71b16e5b50b0466ab72437fb9103e8b11575506912753" style="width: 200px;"></div>
+                    <div>감쪽같은 그녀</div>
+                    <div style="color:red"><img src="star_on.png" style="height:30px; margin-bottom:3px;">8.3</div>
+                </li>
+                <li class="slider__item">
+                    <div><img src="//img1.daumcdn.net/thumb/C180x260/?fname=http://t1.daumcdn.net/movie/10291d6cc5f04385aec91eec026ccbb51572916944250" style="width: 200px;"></div>
+                    <div>라스트 크리스마스</div>
+                    <div style="color:red"><img src="star_on.png" style="height:30px; margin-bottom:3px;">7.4</div>
+                </li>
+                <li class="slider__item">
                     <div><img src="//img1.daumcdn.net/thumb/C180x260/?fname=http://t1.daumcdn.net/movie/fbe0d4ccc4804448a8aacb9e98ccccfe1573614596648" style="width: 200px;"></div>
                     <div>블랙머니</div>
-                    <div>평점3</div>
-                    <div>가격</div>
+                    <div style="color:red"><img src="star_on.png" style="height:30px; margin-bottom:3px;">9.2</div>
                 </li>
                 <li class="slider__item">
                     <div><img src="//img1.daumcdn.net/thumb/C180x260/?fname=http://t1.daumcdn.net/movie/d578c5d478bf43b09bfb7e9f8cd72bf01573095574793" style="width: 200px;"></div>
                     <div>나를 찾아줘</div>
-                    <div>평점4</div>
-                    <div>가격</div>
+                    <div style="color:red"><img src="star_on.png" style="height:30px; margin-bottom:3px;">6.8</div>
                 </li>
                 <li class="slider__item">
                     <div><img src="//img1.daumcdn.net/thumb/C180x260/?fname=http://t1.daumcdn.net/movie/bcfd5bac46aa450eb7bbf3d07c5b8bca1574214529901" style="width: 200px;"></div>
                     <div>쥬만지: 넥스트 레벨</div>
-                    <div>평점5</div>
-                    <div>가격</div>
+                    <div style="color:red"><img src="star_on.png" style="height:30px; margin-bottom:3px;">9.0</div>
                 </li>
-        </ul>
+            </ul>
+        </div>
     </div>
-</div>
-<div id="contentsContainer">
 
-    <div id="movieContainer">
-        <!-- 1. 인기영화 -->
-        <!--
-            인기영화는 movie_info table의 컬럼 중
-            streaming_cnt의 횟수가 높은 기준으로 5개를 선정하여
-            리스트로 보여줍니다.
-        -->
-        <div id="popular">
-            <div class="contents">
-                <div class="boxTitle">실시간 인기 TOP5</div>
-                <div class="box" id="popularMovieList"></div>
-            </div>
-        </div>
-
-        <!-- 2. 최신영화 -->
-        <!-- 
-            최신영화는 releaseDate desc 순으로 보여줍니다...만
-            네이버 api에서 개봉일을 년도까지만 제공해서
-            금일 기준으로 영화 검색의 top 5개를 뽑았습니다.
-        -->
-        <div id="latest">
-            <div class="contents">
-                <div class="boxTitle">최신영화</div>
-                <div class="box slide_btn_box" id="latestMovieList"></div>
-            </div> 
-        </div>
-        <!-- 3. 영화 예고편 -->
-        <!--
-            시간관계상
-            유튜브 링크로 대체?
-        -->
-
-        <div id="trailer" class="trailer">
-            <div class="contents">
-                <div class="boxTitle">인기 예고편</div>
-                <div class="box">
-                    <ul style="display:flex; flex-direction: row; justify-content: space-around; padding:0px; list-style-type: none;">
-                        <li>
-                            <div>
-                                <iframe width="300" height="200" src="https://www.youtube.com/embed/9Dfkx9vEPw0" frameborder="0"></iframe>
-                                <a href="#" style="display:block">블랙위도우</a>
-                            </div>
-                        </li>
-                        <li>
-                            <div>
-                            <iframe width="300" height="200" src="https://www.youtube.com/embed/FKAbTcss1ow" frameborder="0"></iframe>
-                            <a href="#" style="display:block">백두산</a>
-                        </div>
-                        </li>
-                        <li>
-                            <div>
-                            <iframe width="300" height="200" src="https://www.youtube.com/embed/FX-XQpeilms" frameborder="0"></iframe>
-                            <a href="#" style="display:block">해치지않아</a>
-                            </div>
-                        </li>
-                        <li>
-                            <div>
-                                <iframe width="300" height="200" src="https://www.youtube.com/embed/x60mB0zXZ38" frameborder="0" ></iframe>
-                                <a href="#" style="display:block">조커</a>
-                            </div>
-                        </li>
-                    </ul>
+    <div id="contentsContainer">
+        <div id="movieContainer">
+            <!-- 1. 인기영화 -->
+            <!--
+                인기영화는 movie_info table의 컬럼 중
+                streaming_cnt의 횟수가 높은 기준으로 5개를 선정하여
+                리스트로 보여줍니다.
+            -->
+            <div id="popular">
+                <div class="contents">
+                    <div class="boxTitle">실시간 인기 TOP5</div>
+                    <div class="box" id="popularMovieList"></div>
                 </div>
             </div>
+
+            <!-- 2. 최신영화 -->
+            <!-- 
+                최신영화는 releaseDate desc 순으로 보여줍니다...만
+                네이버 api에서 개봉일을 년도까지만 제공해서
+                금일 기준으로 영화 검색의 top 5개를 뽑았습니다.
+            -->
+            <div id="latest">
+                <div class="contents">
+                    <div class="boxTitle">최신영화</div>
+                    <div class="box slide_btn_box" id="latestMovieList"></div>
+                </div> 
+            </div>
+            <!-- 3. 영화 예고편 -->
+            <!--
+                시간관계상
+                유튜브 링크로 대체?
+            -->
+
+            <div id="trailer" class="trailer">
+                <div class="contents">
+                    <div class="boxTitle">인기 예고편</div>
+                    <div class="box">
+                        <ul style="display:flex; flex-direction: row; justify-content: space-around; padding:0px; list-style-type: none;">
+                            <li>
+                                <div>
+                                    <iframe width="300" height="200" src="https://www.youtube.com/embed/9Dfkx9vEPw0" frameborder="0"></iframe>
+                                    <a href="#" style="display:block">블랙위도우</a>
+                                </div>
+                            </li>
+                            <li>
+                                <div>
+                                <iframe width="300" height="200" src="https://www.youtube.com/embed/FKAbTcss1ow" frameborder="0"></iframe>
+                                <a href="#" style="display:block">백두산</a>
+                            </div>
+                            </li>
+                            <li>
+                                <div>
+                                <iframe width="300" height="200" src="https://www.youtube.com/embed/FX-XQpeilms" frameborder="0"></iframe>
+                                <a href="#" style="display:block">해치지않아</a>
+                                </div>
+                            </li>
+                            <li>
+                                <div>
+                                    <iframe width="300" height="200" src="https://www.youtube.com/embed/x60mB0zXZ38" frameborder="0" ></iframe>
+                                    <a href="#" style="display:block">조커</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
         </div>
+        
     </div>
 
 </div>

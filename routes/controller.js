@@ -24,15 +24,17 @@ module.exports = function(app)
     * 
     */
    app.get("/movie/getMovieCarousel", (req,res) => {
-      db.query("select * from movie_info where delete_yn = 'N' order by streaming_cnt desc limit 0,5;", function(err, result){
-         if(err){
-            console.log(err);
-            res.send(err);
-         }else{
-            console.log(result);
-            res.send(result);
-         }
-      });
+      let func = async function(){
+         await db.query("select * from movie_info where delete_yn = 'N' order by streaming_cnt desc limit 0,5;", function(err, result){
+            if(err){
+               console.log(err);
+               res.send(err);
+            }else{
+               console.log(result);
+               res.send(result);
+            }
+         });
+      }();
    });
 
    /**
@@ -45,15 +47,17 @@ module.exports = function(app)
     */
    app.get("/movie/getPopularMovieList", (req,res) => {
       //db.query("select * from movie_info where release_date = 2019 order by user_rating desc limit 0,5;", function(err, result){
-      db.query("select * from movie_info where release_date = 2019 and delete_yn = 'N' order by streaming_cnt desc limit 0,5;", function(err, result){
-         if(err){
-            console.log(err);
-            res.send(err);
-         }else{
-            console.log(result);
-            res.send(result);
-         }
-      });
+      let func = async function(){
+         await db.query("select * from movie_info where release_date = 2019 and delete_yn = 'N' order by streaming_cnt desc limit 0,5;", function(err, result){
+            if(err){
+               console.log(err);
+               res.send(err);
+            }else{
+               console.log(result);
+               res.send(result);
+            }
+         });
+      }();
    });
 
    /**
@@ -65,15 +69,17 @@ module.exports = function(app)
     */
    app.get("/movie/getLatestMovieList",(req,res) => {
       //db.query("select * from movie_info where release_date = 2019 order by user_rating desc limit 0,5;", function(err, result){
-      db.query("select * from movie_info where movie_seq in(13,57,69,67,70);", function(err, result){
-         if(err){
-            console.log(err);
-            res.send(err);
-         }else{
-            console.log(result);
-            res.send(result);
-         }
-      });
+      let func = async function(){
+         await db.query("select * from movie_info where movie_seq in(13,57,69,67,70);", function(err, result){
+            if(err){
+               console.log(err);
+               res.send(err);
+            }else{
+               console.log(result);
+               res.send(result);
+            }
+         });
+      }();
    });
 
    
@@ -137,25 +143,27 @@ module.exports = function(app)
    app.post("/getMovieView", (req,res) => {
       //console.log(req.body.movieSeq);
       //디비에서 해당 seq 영화정보 가져오기
-      db.query("select * from movie_info where movie_seq = "+req.body.movieSeq+";", function(err, result){
-         if(err){
-            console.log(err);
-            res.send(err);
-         }else{
-            console.log(result);
-            //res.render("movieView",{movieTitle : result.movie_title});
-            //res.send(result);
-            res.render("movieView", {
-               movieImage:    result[0].image_url,
-               movieTitle:    result[0].movie_title,
-               movieDirector: result[0].movie_director,
-               movieDesc:     result[0].movie_desc,
-               userRating:    result[0].user_rating,
-               releaseDate:   result[0].release_date,
-               streamingCnt:  result[0].streaming_cnt    
-            });
-         }
-      });
+      let func = async function(){
+         await db.query("select * from movie_info where movie_seq = "+req.body.movieSeq+";", function(err, result){
+            if(err){
+               console.log(err);
+               res.send(err);
+            }else{
+               console.log(result);
+               //res.render("movieView",{movieTitle : result.movie_title});
+               //res.send(result);
+               res.render("movieView", {
+                  movieImage:    result[0].image_url,
+                  movieTitle:    result[0].movie_title,
+                  movieDirector: result[0].movie_director,
+                  movieDesc:     result[0].movie_desc,
+                  userRating:    result[0].user_rating,
+                  releaseDate:   result[0].release_date,
+                  streamingCnt:  result[0].streaming_cnt    
+               });
+            }
+         });
+      }();
    });
 
    // app.get("/movieView", (req,res) => {
@@ -169,6 +177,5 @@ module.exports = function(app)
    app.use('/auth',auth);
 
    app.use('/movie',movie);
-
 
 }

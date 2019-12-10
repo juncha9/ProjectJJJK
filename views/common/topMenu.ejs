@@ -1,4 +1,4 @@
-<div class="nav-bar">
+<div class="nav-bar" style="top:0;">
     <a href="">
         <div id="nav-btn-library" class="nav-btn">
             라이브러리
@@ -41,7 +41,7 @@
         <a href="/movie/list">
             <div class="topMenuBtn" onclick="">영화목록</div>
         </a>
-        <div class="topMenuBtn" onclick="">게시판</div>
+        <div class="topMenuBtn" onclick="location.href='/board/list'">게시판</div>
 
         <div class="topMenuBtn" onclick="">대메뉴4</div>
     </div>
@@ -50,7 +50,7 @@
 </div>
 
 <script type="text/javascript">
-    <% if(session && session.isLogin) {%>
+    <% if(session && session.isLogin) { %>
         $('#nav-btn-library').show();
         $('#nav-btn-me').show();
         $('#nav-btn_logout').show();
