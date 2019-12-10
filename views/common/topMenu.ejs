@@ -1,4 +1,4 @@
-<div class="nav-bar">
+<div class="nav-bar" style="top:0;">
     <a href="">
         <div id="nav-btn-library" class="nav-btn">
             라이브러리
@@ -31,8 +31,8 @@
 
     <div id="topInfo" class="topInfo">
         <div style="float:left;margin:3px;">
-            <img src="" class="" onclick="location.href='/'" />
-            <p style="font-size:8px;">여기 로고와야함</p>
+            <!-- <img src="" class="" onclick="location.href='/'" /> -->
+            <p style="font-size:8px;" onclick="location.href='/'">여기 로고와야함</p>
         </div>
     </div>
     <div id="topMenu" class="topMenu">
@@ -43,7 +43,7 @@
         <a href="/movie/list">
             <div class="topMenuBtn" onclick="">영화목록</div>
         </a>
-        <div class="topMenuBtn" onclick="">게시판</div>
+        <div class="topMenuBtn" onclick="location.href='/board/list'">게시판</div>
 
         <div class="topMenuBtn" onclick="">대메뉴4</div>
     </div>
@@ -52,7 +52,7 @@
 </div>
 
 <script type="text/javascript">
-    <% if(session && session.isLogin) {%>
+    <% if(session && session.isLogin) { %>
         $('#nav-btn-library').show();
         $('#nav-btn-me').show();
         $('#nav-btn_logout').show();
