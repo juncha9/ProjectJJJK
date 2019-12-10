@@ -1,6 +1,5 @@
-const mysql = require("mysql2/promise");
-const private = require(__private);
-
+var private = require(__private);
+var mysql = require("mysql2/promise");
 /*
     데이터베이스 쿼리 모듈입니다.
 

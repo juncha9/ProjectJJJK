@@ -1,7 +1,8 @@
+
 <%- include ('./common/header'); -%>
 <%- include ('./common/topMenu'); -%>
-<%- include('./common/nav') %>
-<link href="stylesheets/auth.css" rel="stylesheet" type="text/css">
+
+<link href="/stylesheets/auth.css" rel="stylesheet" type="text/css">
 <form class="auth-form" action="/auth/register" method="POST" accept-charset="UTF-8" onsubmit="return OnSubmit()">
     <div class="auth-head">
         <p id="title" class="h5">회원가입</p>
@@ -49,8 +50,6 @@
     </div>
 </form>
 
-</div>
-<script src='http://code.jquery.com/jquery-latest.js'></script>
 <script>
 function OnIDChange() {
     //아이디 변경시
@@ -77,13 +76,13 @@ function CheckID() {
         alert('아이디를 입력해주세요.')
         return;
     }
-    var user_id = $('#input-id').val();
+    var userID = $('#input-id').val();
     $.ajax({
             url: '/auth/check_id',
             method: 'POST',
             async: true,
             data: {
-                user_id: user_id
+                userID: userID
             },
             dataType: 'json',
         })
@@ -91,7 +90,7 @@ function CheckID() {
             function(res) {
                 if (res.result == true) {
                     $('#input-id').attr('is-checked', true);
-                    $('#btn-check-id').hide(); 
+                    $('#btn-check-id').hide(); //
                     $('#btn-check-id-success').show(); //성공 이미지 보여줌
                 } 
                 else
@@ -102,9 +101,7 @@ function CheckID() {
         .fail(
             function(error) {
                 alert('error : ' + error);
-            });
-
+        });
 };
-
 </script>
 <%- include ('./common/footer'); -%>

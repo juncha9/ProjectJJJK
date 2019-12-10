@@ -1,7 +1,7 @@
 <%- include ('./common/header'); -%>
 <%- include ('./common/topMenu'); -%>
-<%- include('./common/nav') %>
-<link href="stylesheets/auth.css" rel="stylesheet" type="text/css">
+
+<link href="/stylesheets/auth.css" rel="stylesheet" type="text/css">
 <form class="auth-form" action="/auth/login" accept-charset="UTF-8" method="post">
     <div class="auth-head">
         <p id="title" class="h5">로그인</p>
@@ -20,12 +20,4 @@
         <button type="submit" class="btn btn-primary">로그인</button>
     </div>
 </form>
-<script src='http://code.jquery.com/jquery-latest.js'></script>
-    <!--
-        아이디 비밀번호 확인 메세지 추가예정
-        191206 새결
-    -->
-<script>
-    
-</script>
 <%- include ('./common/footer'); -%>
