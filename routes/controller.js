@@ -1,4 +1,3 @@
-var movie_test = require(__routes+"/movie_test");
 const db = require(__modules+'/database');
 var bodyParser = require('body-parser');
 var request = require("request");
@@ -122,7 +121,6 @@ module.exports = function(app)
 
 
     //컨트롤러 분리
-   app.use('/movie_test', movie_test);
    
    app.use('/auth',auth);
 

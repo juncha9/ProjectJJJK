@@ -6,7 +6,7 @@
     </a>
     <a href="/auth?mode=me">
         <div id="nav-btn-me" class="nav-btn">
-            <%= session.isLogin?session.userID:null %>
+            <%= session && session.isLogin?session.userID:null %>
         </div>
     </a>
     <a href="/auth?mode=logout">
@@ -50,19 +50,17 @@
 </div>
 
 <script type="text/javascript">
-    var isLogin = "<%= session.isLogin?session.isLogin:null %>";
-    if (isLogin === "true") {
+    <% if(session && session.isLogin) {%>
         $('#nav-btn-library').show();
         $('#nav-btn-me').show();
         $('#nav-btn_logout').show();
         $('#nav-btn-login').hide();
         $('#nav-btn-register').hide();
-    } else {
+    <% } else {%>
         $('#nav-btn-library').hide();
         $('#nav-btn-me').hide();
         $('#nav-btn-logout').hide();
         $('#nav-btn-login').show();
         $('#nav-btn-register').show();
-    }
-
+    <% } %>
 </script>
