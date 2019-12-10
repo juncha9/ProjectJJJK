@@ -1,10 +1,8 @@
-
 <%- include ('./common/header'); -%>
 <%- include ('./common/topMenu'); -%>
 
 <link href="/stylesheets/auth.css" rel="stylesheet" type="text/css">
-<div id="wrapper">
-    <%- include(__template+'/nav') %>
+
     <form class="auth-form" action="/auth/login" accept-charset="UTF-8" method="post">
         <div class="auth-head">
             <p id="title" class="h5">로그인</p>
@@ -23,6 +21,6 @@
             <button type="submit" class="btn btn-primary">로그인</button>
         </div>
     </form>
-</div>
+
 
 <%- include ('./common/footer'); -%>

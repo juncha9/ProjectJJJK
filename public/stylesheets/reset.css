@@ -126,9 +126,6 @@ q:after {
     content: none;
 }
 
-a {
-    color: #666;
-}
 
 /* remember to define visible focus styles! 
 :focus {

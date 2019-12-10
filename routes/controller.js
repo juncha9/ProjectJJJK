@@ -14,7 +14,7 @@ module.exports = function(app)
     
     app.use('/auth',auth);
 
-    app.use('movie',movie);
+    app.use('/movie',movie);
 
     /**
      * jQuery ajax 방식 테스트

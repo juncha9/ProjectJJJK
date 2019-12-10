@@ -1,4 +1,9 @@
 body {
     font-family: 'Noto Sans', 'Noto Sans KR';
-
+    
 }
+
+a:link {text-decoration: none; }
+a:visited {text-decoration: none; }
+a:active {text-decoration: none; }
+a:hover {text-decoration: none; color: rgba(0, 0, 0, 0.7); }

@@ -76,13 +76,13 @@ function CheckID() {
         alert('아이디를 입력해주세요.')
         return;
     }
-    var user_id = $('#input-id').val();
+    var userID = $('#input-id').val();
     $.ajax({
             url: '/auth/check_id',
             method: 'POST',
             async: true,
             data: {
-                user_id: user_id
+                userID: userID
             },
             dataType: 'json',
         })

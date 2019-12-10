@@ -1,4 +1,4 @@
-var privateData = require(__private+'/data.json');
+var privateData = require(__private);
 var mysql = require("mysql2/promise");
 /*
     데이터베이스 쿼리 모듈입니다.
