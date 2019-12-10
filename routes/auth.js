@@ -48,9 +48,9 @@ router.post("/login",(req,res)=>{
                 throw "Error : Necessary field is undefined on login";
             }
             [records,fields] = await db.query("SELECT user_seq, user_id, user_name, is_admin FROM user_info WHERE user_id=? AND user_pwd=password(?)",[userID,userPassword]);
+            
             if(records && records.length > 0)
             {   
-                
                 req.session.userSeq = records[0].user_seq;
                 req.session.userID = records[0].user_id;
                 req.session.userName = records[0].user_name;
