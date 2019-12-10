@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="utf-8" />
+    <title>상세페이지</title>
+    <link href="./../public/stylesheets/reset.css" rel="stylesheet" type="text/css">
+    <link href="./../public/stylesheets/movie_detail.css" rel="stylesheet" type="text/css">
+
+
+    <script src="//ajax.googleapis.com/ajax/libs/webfont/1.4.10/webfont.js"></script>
+    <script type="text/javascript">
+        WebFont.load({
+            // For google fonts
+            google: {
+                families: ['Noto Sans', 'Noto Sans KR', 'Nanum Myeongjo', 'Nanum Pen Script']
+            }
+        });
+    </script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <script>
+        var point = 0;
+        $(".star").on('click', function() {
+            var idx = $(this).index();
+            $(".star").removeClass("on");
+            var i;
+            for (i = 0; i <= idx; i++) {
+                $(".star").eq(i).addClass("on");
+            }
+            point = i;
+            alert(point);
+        });
+    </script>
+    <div class="wrap">
+        <div class="movieContainer">
+            <div class="movie-screen">
+                <div class="movie-image">
+                    <img class="img" src="https://movie-phinf.pstatic.net/20191121_221/1574298335357mqgLk_JPEG/movie_image.jpg" alt="포스터">
+                </div>
+                <div class="movie-info">
+                    <div class="info-left">
+                        <div class="m-name">영화제목</div>
+                        <div class="m-desc">줄거리입니다~~~</div>
+                    </div>
+                    <div class="info-right">
+                        <div class="m-director">감독</div>
+                        <div class="m-genre">장르</div>
+                        <div class="m-grade">평점</div>
+                    </div>
+                </div>
+            </div>
+            <div class="reply-list">
+                <div class="reply-box">
+
+                </div>
+                <div class="reply-box">
+                </div>
+            </div>
+
+            <form class="review-form">
+                <div id="top">
+                    <div class="star-box">
+                        <span class="star star_left"></span>
+                        <span class="star star_right"></span>
+
+                        <span class="star star_left"></span>
+                        <span class="star star_right"></span>
+
+                        <span class="star star_left"></span>
+                        <span class="star star_right"></span>
+
+                        <span class="star star_left"></span>
+                        <span class="star star_right"></span>
+
+                        <span class="star star_left"></span>
+                        <span class="star star_right"></span>
+                    </div>
+                </div>
+                <div id="bottom">
+                    <textarea class="review-text">
+                    </textarea>
+                    <button class="review-add-btn" type="submit">등록</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+
+</body></html>

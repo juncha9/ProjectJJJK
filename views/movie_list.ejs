@@ -1,20 +1,85 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title></title>
-    <link href="/stylesheets/general.css" rel="stylesheet" type="text/css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-</head>
-<body>
-    영화 리스트
-    <% for(i = 0; i<records.length; i++){%>
+<%- include ('./common/header'); -%>
+<%- include ('./common/topMenu'); -%>
+
+<link href="/stylesheets/movie_list.css" rel="stylesheet" type="text/css">
+<div class="movieListContainer">
+    <div class="page-head">
         <div>
-            <%= records[i].movie_name %>
-            <%= records[i].movie_director %>
-            <%= records[i].movie_desc %>
-            <%= records[i].release_date %>
+            영화리스트
         </div>
-    <% } %>
-</body>
-</html>
+        <div class="movie-list-orderby">
+            <select>
+                <option value="name">
+                    이름 순
+                </option>
+                <option value="insert-date">
+                    출시일 순
+                </option>
+            </select>
+        </div>
+    </div>
+
+    
+    <div class="movie-page-index">
+        <a class="index">
+            이전
+        </a>
+        <a class="index">
+            1
+        </a>
+        <a class="index">
+            2
+        </a>
+        <a class="index">
+            3
+        </a>
+        <a class="index">
+            4
+        </a>
+        <a class="index">
+
+        </a>
+        <a class="index">
+
+        </a>
+        <a class="index">
+
+        </a>
+        <a class="index">
+            다음
+        </a>
+    </div>
+    
+    <div class="movie-list">
+        <% for(var i = 0; i<records.length; i++){ %>
+        <article class="listing">
+            <div class="movie-image">
+                <% if (records[i].image_url === "") { %>
+                    <div class="movie-image-overlay"><%= records[i].movie_title %></div>
+                <% } %>
+                    <img class="img" src="<%= records[i].image_url %>" 
+                    onError="this.onerror=null; this.src='/missing_poster.png';" >
+            </div>
+            <a class="movie-hover" href="<%= '/movie/detail?seq=' + records[i].movie_seq %>">
+                <%= records[i].movie_title %>
+            </a>
+            <div class="movie-info">
+                <div class="movie-title">
+                        <%= records[i].movie_title %>
+                </div>
+                <% if(records[i].user_rating !== 0) { %>
+                    <div class="movie-sub">
+                        <%= '평점 : '+records[i].user_rating %>
+                    </div>
+                <% } %>
+                <div class="movie-desc">
+                    <%= records[i].movie_desc%>
+                </div>
+            </div>
+            <script>
+                </script>
+        </article>
+        <%}%>
+    </div>
+
+</div>

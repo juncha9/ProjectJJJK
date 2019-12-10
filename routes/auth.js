@@ -1,6 +1,5 @@
 const db = require(__modules+'/database');
 const router = require('express').Router();
-const private = require(__private);
 router.get("/",(req,res)=>
 {
     if(req.query.mode === 'login')
@@ -21,12 +20,13 @@ router.get("/",(req,res)=>
                 {   
                     console.log("User logout:"+req.session.userID);
                     await req.session.destroy();
-                    res.redirect('/');
                 }
+                res.redirect('/');
             }
             catch(err)
             {
                 console.error(err);
+                res.redirect('/');
             }        
         }();
     }
@@ -48,9 +48,9 @@ router.post("/login",(req,res)=>{
                 throw "Error : Necessary field is undefined on login";
             }
             [records,fields] = await db.query("SELECT user_seq, user_id, user_name, is_admin FROM user_info WHERE user_id=? AND user_pwd=password(?)",[userID,userPassword]);
+            
             if(records && records.length > 0)
             {   
-                
                 req.session.userSeq = records[0].user_seq;
                 req.session.userID = records[0].user_id;
                 req.session.userName = records[0].user_name;
@@ -77,7 +77,6 @@ router.post("/check_id",(req,res)=>{
     let fn = async function()
     {
         let userID = req.body.userID;
-
         try
         {
             [records,fields] = await db.query("SELECT * FROM user_info WHERE user_id=?",[userID]);    
@@ -127,5 +126,6 @@ router.post("/register",(req,res)=>
         }
     }();
 });
+
 
 module.exports = router;

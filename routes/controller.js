@@ -1,10 +1,10 @@
-var movie_test = require(__routes+"/movie_test");
 const db = require(__modules+'/database');
 var bodyParser = require('body-parser');
 var request = require("request");
 var client_id = "JoRmTB4RuwMXAerDk0Yz";
 var client_secret = "MSlMuaCNgp";
-
+var auth = require(__routes+"/auth");
+var movie = require(__routes+"/movie");
 
 module.exports = function(app)
 {
@@ -12,10 +12,9 @@ module.exports = function(app)
    app.use(bodyParser.urlencoded({extended:true}));
 
    app.get("/",(req,res)=>{
-      res.render("index.ejs");
+        res.render("index.ejs");
    });
 
-   app.use('/movie_test', movie_test);
    //컨트롤러 분리
 
    /**
@@ -163,5 +162,13 @@ module.exports = function(app)
    //    console.log("하이");
    //    res.render("movieView.ejs");
    // });
-}
 
+
+    //컨트롤러 분리
+   
+   app.use('/auth',auth);
+
+   app.use('/movie',movie);
+
+
+}

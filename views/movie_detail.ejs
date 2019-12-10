@@ -1,0 +1,148 @@
+<%- include ('./common/header'); -%>
+<%- include ('./common/topMenu'); -%>
+
+<link href="/stylesheets/movie_detail.css" rel="stylesheet" type="text/css">
+
+<div class="movieContainer">
+
+    <div class="page-head">
+            <div>
+                영화정보
+            </div>
+            
+        </div>
+
+    <div class="movie-screen">
+        <div class="movie-image">
+            <img class="img" src="https://movie-phinf.pstatic.net/20191121_221/1574298335357mqgLk_JPEG/movie_image.jpg"
+                alt="포스터">
+        </div>
+        <div class="movie-info">
+
+                <div id="title"><%=movie.movie_title%></div>
+                <div id="sub-box">
+                        <div id="sub-desc">감독 : <%= movie.movie_director.split('|') %></div>
+                        <div id="sub-desc">장르 : <%= movie.movie_genre %></div>
+                        <div id="sub-desc">평점 : <%= movie.user_rating %></div>
+                </div>
+                <div id="desc"><%=movie.movie_desc %></div>
+        </div>
+    </div>
+    <div class="reply-list">
+        <% for(var i = 0; i < replies.length; i++ ) { %>
+            <div class="reply-box">
+                <div id="name">
+                    <%= replies[i].user_name%>
+                </div>
+                <div id="date">
+                    <%= replies[i].insert_date%>
+                </div>
+                <div id="contents">
+                    <%= replies[i].reply_contents %>
+                </div>
+            </div>
+        <% } %>
+    </div>
+    <% if(session.isLogin) {%>
+        <div class="review-form">
+            <div id="top">
+                <div class="star-box">
+                    <span class="star"></span>
+
+                    <span class="star"></span>
+
+                    <span class="star"></span>
+
+                    <span class="star"></span>
+
+                    <span class="star"></span>
+                </div>
+            </div>
+            <div id="bottom">
+                <textarea class="review-text"></textarea>
+                <button class="review-add-btn" type="button" onclick="OnAddReview()">등록</button>
+            </div>
+        </div>
+    <% } %>
+</div>
+
+
+
+<script>
+    var rating = 0;
+    <% if(session && session.isLogin) {%>
+        var userSeq = <%= session.userSeq %>;
+        var userID = '<%= session.userID %>';
+        var userName = '<%= session.userName %>';
+        var isAdmin = '<%= session.isAdmin %>';
+    <% } %>
+
+    
+    $(".star").on('click', function () {
+        var idx = $(this).index();
+        $(".star").removeClass("on");
+        var i;
+        for (i = 0; i <= idx; i++) {
+            $(".star").eq(i).addClass("on");
+        }
+        rating = i;
+    });
+    
+    function OnAddReview()
+    {
+        if(<%= movie.movie_seq?false:true%>)
+        {
+            alert('영화정보가 없습니다.');
+            return false;
+        }
+        if(<%=session.userSeq?false:true%>)
+        {
+            alert('유저정보가 없습니다.');
+            return false;
+        }
+        var contents = $('.review-text').val();
+        if(!contents)
+        {
+            alert('내용이 없습니다.');
+            return false;
+        }
+        if(rating <= 0)
+        {
+            alert('별점이 없습니다.');
+            return false;
+        }
+
+        $.ajax({
+            url: '/movie/add_reply',
+            method: 'POST',
+            data:
+            {
+                movieSeq: <%= movie.movie_seq %>,
+                userSeq: userSeq,
+                movieRating: rating,
+                replyContents: contents
+            },
+       })
+       .done(
+            function(res)
+            {
+                if(res.result === true)
+                {
+                    alert('등록 성공');
+                    location.reload();   
+                }
+                else
+                {
+                    alert('등록 실패');
+                }
+                
+        })
+       .fail(
+            function(error)
+            {
+                alert('error : '+ error);
+        });
+        
+    };
+</script>
+<%- include ('./common/footer'); -%>
