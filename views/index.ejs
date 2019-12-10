@@ -3,74 +3,8 @@
 <link rel="stylesheet" href="/stylesheets/main.css" type="text/css">
 
 <script>
-    // function test(str){
-    //     if(str == null || str == ""){ alert ('검색어를 입력하세요.'); return;}
-
-    //     $.ajax({
-    //         //url: "/test/jQueryAjaxGet",
-    //         url:"/hidden/searchMovieForInsert",
-    //         type:"get",
-    //         data: {
-    //             query: str
-    //         },
-    //         dataType: "json",
-    //         success: function(data) {
-    //             //alert(data);
-    //             alert("검색완료");
-    //             console.log(JSON.stringify(data));
-    //             console.log(data.items);
-                
-    //             /**
-    //              * 20191209 현규
-    //              * 네이버 영화 api 연동
-    //              * 네이버 api에선 영화 검색밖에 지원을 안하네요
-    //              * 해당 정보를 직접 리스트에 뿌리기는 그렇고
-    //              */
-    //             // 네이버api통한 영화 검색시 필요로하는 정보는 items array안에 있습니다.
-    //             //
-    //             var div = $("#popularMovieList");
-    //             var ul = $("<ul style='display:flex; flex-direction: row; justify-content: space-around; padding:0px;'>").appendTo(div);
-    //             for(var i=0; i<data.items.length;i++){
-    //                 var li = $("<li>").appendTo(ul);
-    //                 $("<div>").html("<img src='"+data.items[i].image+"'>").appendTo(li);
-    //                 $("<div>").html(data.items[i].title).appendTo(li); 
-    // 	            $("<div>").html("평점 : "+data.items[i].userRating).appendTo(li); 
-    //             }
-    //         },
-    //         error: function(err){
-    //             alert(err);
-    //         }
-    //     });
-    // };
-
     //onload
     $(document).ready(function(){
-        $("#ajaxGet").click(function(){
-            $.ajax({
-                url: '/test/jQueryAjaxGet',
-                type:'get',
-                success: function(data) {
-                    alert(data);
-                },
-                error: function(err){
-                    alert(err);
-                }
-            });
-        });
-
-        $("#ajaxPost").click(function(){
-            $.ajax({
-                url: '/test/jQueryAjaxPost',
-                type:'post',
-                success: function(data) {
-                    alert(data);
-                },
-                error: function(err){
-                    alert(err);
-                }
-            });
-        });
-
         /*191209 현규
         바닐라 자바스크립트로 캐러셀 만들기
         */
@@ -93,14 +27,74 @@
             }
         }
         slide();
-        setInterval(slide, 2000); //자동스크롤
-
+        setInterval(slide, 2000); //캐러셀 자동스크롤
+        
         //20191210
         //실시간 인기 top5 영화
         getPopularMovieList();
         //최신 발매
         getLatestMovieList();
+        //영화 리스트 무한 슬라이더
+        // slideMove();
     });
+
+    //영화 리스트 무한 슬라이더용 변수
+    // var ul = document.querySelector('.slide_wrap');
+    // var firstItemClone = ul.firstElementChild.cloneNode(true);
+    // ul.appendChild(firstItemClone);
+
+    // function slideMove(){
+    //     var curIndex = 0;
+    //     setInterval(function(){
+    //         ul.style.transition = '0.2s';
+    //         ul.style.transform = "translate3d(-"+200*(curIndex+1)+"px, 0px, 0px)";
+    //         curIndex++;
+    //         if(curIndex === 5){
+    //             setTimeout(function(){
+    //                 ul.style.transition = '0s';
+    //                 ul.style.transform = "translate3d(0px, 0px, 0px)";
+    //             },201)
+    //             curIndex = 0;
+    //         }
+    //     },1000);
+    // }
+
+    /**
+     * 191210 동적 캐러셀
+     * 
+     */
+    function getMovieCarousel(){
+        $.ajax({
+            url:"/movie/getMovieCarousel",
+            type:"get",
+            dataType: "json",
+            success: function(data) {
+                var div = $("#movieCarouselContainer");
+                div.addClass("slider");
+                //div.addClass("gallery");
+                //var div2 = $("<div>").addClass("gallery").appendTo(div);
+                // var ul = $("<ul>").addClass("clearfix").appendTo(div);
+                // console.log(data);
+                // console.log(data.length);
+                // for(var i=0; i<data.length;i++){
+                //     var li = $("<li>").addClass("slide_item").bind("click",data[i].movie_seq,function(e){goView(e.data)}).appendTo(ul);
+                //     $("<div>").html("<img src='"+data[i].image_url+"'>").appendTo(li);
+                //     $("<div>").html(data[i].movie_title).appendTo(li); 
+    	        //     $("<div>").html("평점 : "+data[i].user_rating).appendTo(li); 
+                // }
+                var ul = $("<ul style='display:flex; flex-direction: row; justify-content: space-around; padding:0px;'>").appendTo(div);
+                for(var i=0; i<data.length;i++){
+                    var li = $("<li>").addClass("slider__item").bind("click",data[i].movie_seq,function(e){goView(e.data)}).appendTo(ul);
+                    $("<div>").html("<img src='"+data[i].image_url+"'>").appendTo(li);
+                    $("<div>").html(data[i].movie_title).appendTo(li); 
+    	            $("<div>").html("평점 : "+data[i].user_rating).appendTo(li); 
+                }
+            },
+            error: function(err){
+                alert(err);
+            }
+        });
+    }
 
     // 실시간 인기 top5목록
     function getPopularMovieList(){
@@ -110,6 +104,17 @@
             dataType: "json",
             success: function(data) {
                 var div = $("#popularMovieList");
+                //div.addClass("gallery");
+                //var div2 = $("<div>").addClass("gallery").appendTo(div);
+                // var ul = $("<ul>").addClass("clearfix").appendTo(div);
+                // console.log(data);
+                // console.log(data.length);
+                // for(var i=0; i<data.length;i++){
+                //     var li = $("<li>").addClass("slide_item").bind("click",data[i].movie_seq,function(e){goView(e.data)}).appendTo(ul);
+                //     $("<div>").html("<img src='"+data[i].image_url+"'>").appendTo(li);
+                //     $("<div>").html(data[i].movie_title).appendTo(li); 
+    	        //     $("<div>").html("평점 : "+data[i].user_rating).appendTo(li); 
+                // }
                 var ul = $("<ul style='display:flex; flex-direction: row; justify-content: space-around; padding:0px;'>").appendTo(div);
                 console.log(data);
                 console.log(data.length);
@@ -150,11 +155,21 @@
         });
     }
 
+    /**
+     * 20191210 현규
+     * seq를가지고 view로 이동
+     */
     function goView(movieSeq){
         frm.movieSeq.value = movieSeq;
         goPage("/getMovieView");
     }
 
+     /**
+     * 20191210 현규
+     * submit() call
+     * 전체 form은 header.ejs와 footer.ejs에서 열고 닫힌다.
+     * 폼 이동을 간편하게 하기 위함
+     */
     function goPage(forwardStr){
         frm.action = forwardStr;
         frm.target = "_self";
@@ -163,13 +178,14 @@
 
 </script>
 
+<form name="frm" method="post" action="">
 <!-- movieSeq넘기기 위한 히든값입니다. -->
 <input type="hidden" name="movieSeq"/>
 <!-- 
     191205 현규
     Ajax추가, 확인
  -->
- <div id="movieSliderContainer">
+ <div id="movieCarouselContainer">
     <div class="slider">
         <ul style="display:flex; flex-direction: row; justify-content: space-around; padding:0px;">
             <li class="slider__item">
@@ -179,29 +195,47 @@
                 <div>가격</div>
             </li>
             <li class="slider__item">
-                <div><img src="http://img.movist.com/?img=/x00/05/13/60_p1.jpg" style="width: 200px;"></div>
-                <div>겨울왕국2</div>
+                <div><img src="http://img1.daumcdn.net/thumb/C180x260/?fname=http://t1.daumcdn.net/movie/6651521f62d94a5d8b8ceae8aebcb9501575422460657" style="width: 200px;"></div>
+                <div>포드 V 페라리</div>
                 <div>평점2</div>
                 <div>가격</div>
             </li>
             <li class="slider__item">
-                <div><img src="http://img.movist.com/?img=/x00/05/13/60_p1.jpg" style="width: 200px;"></div>
-                <div>겨울왕국2</div>
+                <div><img src="http://img1.daumcdn.net/thumb/C180x260/?fname=http://t1.daumcdn.net/movie/21bd40df541c43bbbd6a8058e21bacce1574236016658" style="width: 200px;"></div>
+                <div>나이브스 아웃</div>
                 <div>평점3</div>
                 <div>가격</div>
             </li>
             <li class="slider__item">
-                <div><img src="http://img.movist.com/?img=/x00/05/13/60_p1.jpg" style="width: 200px;"></div>
-                <div>겨울왕국2</div>
+                <div><img src="//img1.daumcdn.net/thumb/C180x260/?fname=http://t1.daumcdn.net/movie/71b16e5b50b0466ab72437fb9103e8b11575506912753" style="width: 200px;"></div>
+                <div>감쪽같은 그녀</div>
                 <div>평점4</div>
                 <div>가격</div>
             </li>
             <li class="slider__item">
-                <div><img src="http://img.movist.com/?img=/x00/05/13/60_p1.jpg" style="width: 200px;"></div>
-                <div>겨울왕국2</div>
+                <div><img src="//img1.daumcdn.net/thumb/C180x260/?fname=http://t1.daumcdn.net/movie/10291d6cc5f04385aec91eec026ccbb51572916944250" style="width: 200px;"></div>
+                <div>라스트 크리스마스</div>
                 <div>평점5</div>
                 <div>가격</div>
             </li>
+            <li class="slider__item">
+                    <div><img src="//img1.daumcdn.net/thumb/C180x260/?fname=http://t1.daumcdn.net/movie/fbe0d4ccc4804448a8aacb9e98ccccfe1573614596648" style="width: 200px;"></div>
+                    <div>블랙머니</div>
+                    <div>평점3</div>
+                    <div>가격</div>
+                </li>
+                <li class="slider__item">
+                    <div><img src="//img1.daumcdn.net/thumb/C180x260/?fname=http://t1.daumcdn.net/movie/d578c5d478bf43b09bfb7e9f8cd72bf01573095574793" style="width: 200px;"></div>
+                    <div>나를 찾아줘</div>
+                    <div>평점4</div>
+                    <div>가격</div>
+                </li>
+                <li class="slider__item">
+                    <div><img src="//img1.daumcdn.net/thumb/C180x260/?fname=http://t1.daumcdn.net/movie/bcfd5bac46aa450eb7bbf3d07c5b8bca1574214529901" style="width: 200px;"></div>
+                    <div>쥬만지: 넥스트 레벨</div>
+                    <div>평점5</div>
+                    <div>가격</div>
+                </li>
         </ul>
     </div>
 </div>
@@ -214,11 +248,10 @@
             streaming_cnt의 횟수가 높은 기준으로 5개를 선정하여
             리스트로 보여줍니다.
         -->
-        <div class="popular">
+        <div id="popular">
             <div class="contents">
                 <div class="boxTitle">실시간 인기 TOP5</div>
-                <div class="box" id="popularMovieList">
-                </div>
+                <div class="box" id="popularMovieList"></div>
             </div>
         </div>
 
@@ -228,11 +261,10 @@
             네이버 api에서 개봉일을 년도까지만 제공해서
             금일 기준으로 영화 검색의 top 5개를 뽑았습니다.
         -->
-        <div class="latest">
+        <div id="latest">
             <div class="contents">
                 <div class="boxTitle">최신영화</div>
-                <div class="box" id="latestMovieList">
-                </div>
+                <div class="box slide_btn_box" id="latestMovieList"></div>
             </div> 
         </div>
         <!-- 3. 영화 예고편 -->
@@ -240,7 +272,8 @@
             시간관계상
             유튜브 링크로 대체?
         -->
-        <div id="movieTrailerList" class="trailer">
+
+        <div id="trailer" class="trailer">
             <div class="contents">
                 <div class="boxTitle">인기 예고편</div>
                 <div class="box">
@@ -265,14 +298,8 @@
                         </li>
                         <li>
                             <div>
-                            <iframe width="300" height="200" src="https://www.youtube.com/embed/x60mB0zXZ38" frameborder="0" ></iframe>
-                            <a href="#" style="display:block">조커</a>
-                        </div>
-                        </li>
-                        <li>
-                            <div>
-                            <iframe width="300" height="200" src="https://www.youtube.com/embed/jDirUVKQbSE" frameborder="0"></iframe>
-                            <a href="#" style="display:block">뮬란</a>
+                                <iframe width="300" height="200" src="https://www.youtube.com/embed/x60mB0zXZ38" frameborder="0" ></iframe>
+                                <a href="#" style="display:block">조커</a>
                             </div>
                         </li>
                     </ul>
@@ -282,5 +309,5 @@
     </div>
 
 </div>
-
+</form>
 <%- include ('./common/footer'); -%>
