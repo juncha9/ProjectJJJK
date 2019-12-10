@@ -19,61 +19,54 @@
         </div>
     </div>
 
-    
     <div class="movie-page-index">
-        <a class="index">
-            이전
-        </a>
-        <a class="index">
-            1
-        </a>
-        <a class="index">
-            2
-        </a>
-        <a class="index">
-            3
-        </a>
-        <a class="index">
-            4
-        </a>
-        <a class="index">
-
-        </a>
-        <a class="index">
-
-        </a>
-        <a class="index">
-
-        </a>
-        <a class="index">
-            다음
-        </a>
+        <% if(startPage-1 > 0) { %>
+            <a id="link-index" href="/movie/list?page=<%=startPage-1%>">
+                이전
+            </a>
+        <% } %>
+        <% for (var i = startPage; i<= endPage; i++ ) {%>
+            <% if( i == page) {%>
+                <span id="index">
+                    <%=i%>
+                </span>
+            <% } else {%>
+                <a id="link-index" href="/movie/list?page=<%=i%>">
+                    <%=i%>
+                </a>
+            <% } %>
+        <% } %>
+        <% if(endPage+1 <= totalPage) { %>
+            <a id="link-index" href="/movie/list?page=<%=endPage+1%>">
+                다음
+            </a>
+        <% } %>
     </div>
     
     <div class="movie-list">
-        <% for(var i = 0; i<records.length; i++){ %>
+        <% for(var i = 0; i<movies.length; i++){ %>
         <article class="listing">
             <div class="movie-image">
-                <% if (records[i].image_url === "") { %>
-                    <div class="movie-image-overlay"><%= records[i].movie_title %></div>
+                <% if (movies[i].image_url === "") { %>
+                    <div class="movie-image-overlay"><%= movies[i].movie_title %></div>
                 <% } %>
-                    <img class="img" src="<%= records[i].image_url %>" 
+                    <img class="img" src="<%= movies[i].image_url %>" 
                     onError="this.onerror=null; this.src='/missing_poster.png';" >
             </div>
-            <a class="movie-hover" href="<%= '/movie/detail?seq=' + records[i].movie_seq %>">
-                <%= records[i].movie_title %>
+            <a class="movie-hover" href="<%= '/movie/detail?seq=' + movies[i].movie_seq %>">
+                <%= movies[i].movie_title %>
             </a>
             <div class="movie-info">
                 <div class="movie-title">
-                        <%= records[i].movie_title %>
+                        <%= movies[i].movie_title %>
                 </div>
-                <% if(records[i].user_rating !== 0) { %>
+                <% if(movies[i].user_rating !== 0) { %>
                     <div class="movie-sub">
-                        <%= '평점 : '+records[i].user_rating %>
+                        <%= '평점 : '+movies[i].user_rating %>
                     </div>
                 <% } %>
                 <div class="movie-desc">
-                    <%= records[i].movie_desc%>
+                    <%= movies[i].movie_desc%>
                 </div>
             </div>
             <script>

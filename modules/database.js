@@ -46,12 +46,19 @@ module.exports =
             }
             else
             {
-                console.log('Query start : ' + queryString);
+                if(arguments.length>1)
+                {
+                    console.log('Query: ' + queryString +' ['+ placeHolder + ']');
+                }
+                else
+                {
+                    console.log('Query : ' + queryString);
+                }
                 var connect;
                 try
                 {
                     var result;
-                    console.log('Start DB connect');
+                    //console.log('Start DB connect');
                     connect = await pool.getConnection(async conn => conn);
                     try
                     {
@@ -72,7 +79,7 @@ module.exports =
                         console.log('Start rollback because on error');
                         throw err;
                     }
-                    console.log('End DB connect');
+                    //console.log('End DB connect');
                     resolve(result);
                 }
                 catch(err)
@@ -85,7 +92,7 @@ module.exports =
                     if(connect != undefined)
                     {
                         connect.release();
-                        console.log('DB connect end');
+                        //console.log('DB connect end');
                     }
                 }
             }

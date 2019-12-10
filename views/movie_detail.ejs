@@ -14,8 +14,7 @@
 
     <div class="movie-screen">
         <div class="movie-image">
-            <img class="img" src="https://movie-phinf.pstatic.net/20191121_221/1574298335357mqgLk_JPEG/movie_image.jpg"
-                alt="포스터">
+            <img class="img" src="<%=movie.image_url%>" onError="this.onerror=null; this.src='/missing_poster.png';">
         </div>
         <div class="movie-info">
 
@@ -43,7 +42,10 @@
             </div>
         <% } %>
     </div>
-    <% if(session.isLogin) {%>
+
+
+
+    <% if(session && session.isLogin) {%>
         <div class="review-form">
             <div id="top">
                 <div class="star-box">

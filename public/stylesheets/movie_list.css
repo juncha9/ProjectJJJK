@@ -28,14 +28,22 @@ body {
 }
 
 .movie-page-index {
-    display: flex;
-    flex-direction: row;
-    width: 250px;
-    justify-content: space-between;
-    align-content: center;
-    align-items: center;
-    padding: 5px 0px;
+    display: grid;
+    grid-template-columns: repeat(11,1fr);
+    width: 400px;
+    text-align: center;
+    margin-top: 20px;
     
+}
+
+.movie-page-index #index
+{
+    color: rgba(0, 0, 0, 1);
+}
+
+.movie-page-index #link-index
+{
+    color: rgba(0, 0, 0, 0.5);
 }
 
 .movie-list {

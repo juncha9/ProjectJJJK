@@ -51,6 +51,7 @@
     height: 214px;
 }
 .movie-info {
+    flex: 1;
     display: flex;
     flex-direction: column;
     
@@ -60,6 +61,7 @@
 
 .movie-info #sub-box
 {
+
     display: flex;
     align-items: flex-end;
     flex-direction: column;
