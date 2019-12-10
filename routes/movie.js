@@ -46,8 +46,8 @@ router.get('/detail',(req,res)=>
         try
         {
             [movies, movieFields] = await db.query('select * from movie_info where movie_seq=?',[movieSeq]); 
-            [replies, replyFields] = await db.query("select user_name, reply_contents, movie_rating, DATE_FORMAT(movie_reply_info.insert_date,'%Y-%m-%d') as insert_date from DB.movie_reply_info, DB.user_info where movie_seq=?",[movieSeq]);
-            console.log(replies[0].reply_contents);
+            [replies, replyFields] = await db.query("SELECT r.reply_contents, r.movie_rating, DATE_FORMAT(r.insert_date,'%Y-%m-%d') AS insert_date, user_name FROM movie_reply_info r INNER JOIN user_info u ON u.user_seq = r.user_seq where movie_seq=?",[movieSeq]);
+          
             //await를 사용하면 쿼리를 마치고 리턴값이 올때까지 기다린다.
             //만약 응답이없으면 timeout이 2초로 설정되있기에 2초뒤에 catch err로 전달된다.
             if(movies.length>0)
