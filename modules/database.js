@@ -16,6 +16,7 @@ const private = require(__private);
     (module)은 불러온 명칭
 */
 
+
 const pool = mysql.createPool(
 {
     host: private.mysqlInfo.host,

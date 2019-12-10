@@ -18,14 +18,14 @@ app.set('port',process.env.PORT || 3000);
 app.set('view engine','ejs');
 app.use(favicon(__public + '/favicon.png'));
 app.use(express.static(__public));
-var mysqlInfo = 
-app.use(session(
-    {
-        secret: private.session.secret,
-        resave: false,
-        saveUninitialized: true
-    }
-));
+// var mysqlInfo = 
+// app.use(session(
+//     {
+//         secret: private.session.secret,
+//         resave: false,
+//         saveUninitialized: true
+//     }
+// ));
 
 //BodyParser 사용
 app.use(express.json());
