@@ -1,12 +1,106 @@
 <%- include ('./common/header'); -%>
 <%- include ('./common/topMenu'); -%>
 
-<%= movieTitle %>
-<%= movieImage %>
-<%= movieDirector %>
-<%= movieDesc %>
-<%= userRating %>
-<%= releaseDate %>
-<%= streamingCnt %>
+<link href="/stylesheets/movie_detail.css" rel="stylesheet" type="text/css">
 
+<script>
+    //onload
+    $(document).ready(function(){
+        getMovieReplyList();
+    });
+
+
+    var rating = 0;
+    <% if(session && session.isLogin) {%>
+        var userSeq = <%= session.userSeq %>;
+        var userID = '<%= session.userID %>';
+        var userName = '<%= session.userName %>';
+        var isAdmin = '<%= session.isAdmin %>';
+    <% } %>
+    
+    $(".star").on('click', function () {
+        var idx = $(this).index();
+        $(".star").removeClass("on");
+        var i;
+        for (i = 0; i <= idx; i++) {
+            $(".star").eq(i).addClass("on");
+        }
+        rating = i;
+    });
+
+    function getMovieReplyList(){
+        $.ajax({
+            url:"/movie/getMovieReplyList?movieSeq=<%=movieSeq%>",
+            type:"get",
+            dataType: "json",
+            success: function(data) {
+                var div = $("#replylist");
+                //var ul = $("<ul style='display:flex; flex-direction: row; justify-content: space-around; padding:0px;'>").appendTo(div);
+                console.log(data);
+                console.log(data.length);
+                for(var i=0; i<data.length;i++){
+                    var div2 = $("<div>").addClass("reply-box").appendTo(div);
+                    $("<div id='name'>").text(data[i].user_name).appendTo(div2);
+                    $("<div id='date'>").text(data[i].insert_date).appendTo(div2);
+                    $("<div id='contents'>").text(data[i].reply_contents).appendTo(div2);
+                }
+            },
+            error: function(err){
+                alert(err);
+            }
+        });
+    }
+</script>
+<input type="hidden" name="movieSeq" value="<%=movieSeq%>"/>
+<div class="movieContainer">
+    <div class="page-head">
+            <div>
+                영화정보
+            </div>
+            
+        </div>
+
+    <div class="movie-screen">
+        <div class="movie-image">
+            <img class="img" src="<%=movieImage%>" onError="this.onerror=null; this.src='/missing_poster.png';">
+        </div>
+        <div class="movie-info">
+
+                <div id="title"><%=movieTitle%></div>
+                <div id="sub-box">
+                        <div id="sub-desc">감독 : <%= movieDirector.replace('|'," ") %></div>
+                        <!-- <div id="sub-desc">장르 : <%# = movie.movie_genre #%></div> -->
+                        <div id="sub-desc">평점 : <%= userRating %></div>
+                </div>
+                <div id="desc"><%= movieDesc %></div>
+        </div>
+    </div>
+
+    <div class="reply-list" id="replylist">
+    </div>
+
+
+
+    <% if(session && session.isLogin) {%>
+        <div class="review-form">
+            <div id="top">
+                <div class="star-box">
+                    <span class="star"></span>
+
+                    <span class="star"></span>
+
+                    <span class="star"></span>
+
+                    <span class="star"></span>
+
+                    <span class="star"></span>
+                </div>
+            </div>
+            <div id="bottom">
+                <textarea class="review-text"></textarea>
+                <button class="review-add-btn" type="button" onclick="OnAddReview()">등록</button>
+            </div>
+        </div>
+    <% } %>
+</div>
 <%- include ('./common/footer'); -%>
