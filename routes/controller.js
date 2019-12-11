@@ -26,15 +26,6 @@ module.exports = function(app)
     */
    app.get("/movie/getMovieCarousel", (req,res) => {
       let func = async function(){
-         // await db.query("select * from movie_info where delete_yn = 'N' order by streaming_cnt desc limit 0,5;", function(err, result){
-         //    if(err){
-         //       console.log(err);
-         //       res.send(err);
-         //    }else{
-         //       console.log(result);
-         //       res.send(result);
-         //    }
-         // });
          try{
             [records, fields] = await db.query("select * from movie_info where delete_yn ='N' order by streaming_cnt desc limit 0,5;");
          }catch(err){
@@ -60,21 +51,6 @@ module.exports = function(app)
    app.get("/movie/getPopularMovieList", (req,res,next) => {
       //db.query("select * from movie_info where release_date = 2019 order by user_rating desc limit 0,5;", function(err, result){
       let func = async function(){
-         // try{
-         //    await db.query("select * from movie_info where release_date = 2019 and delete_yn = 'N' order by streaming_cnt desc limit 0,5;", function(err, result){
-         //       if(err){
-         //          console.log(err);
-         //          res.send(err);
-         //       }else{
-         //          console.log(result);
-         //          res.send(result);
-         //       }
-         //    });
-         // }catch(exception){
-         //    console.log(exception);
-         //    res.redirect("/");
-         // }
-
          try{
             [records, fields] = await db.query("select * from movie_info where release_date = 2019 and delete_yn = 'N' order by streaming_cnt desc limit 0,5;");
          }catch(err){
@@ -101,20 +77,6 @@ module.exports = function(app)
     */
    app.get("/movie/getLatestMovieList",(req,res) => {
       let func = async function(){
-         // try{
-         //    await db.query("select * from movie_info where movie_seq in(13,57,69,67,70);", function(err, result){
-         //       if(err){
-         //          console.log(err);
-         //          res.send(err);
-         //       }else{
-         //          console.log(result);
-         //          res.send(result);
-         //       }
-         //    });
-         // }catch(exception){
-         //    console.log(exception);
-         //    res.redirect("/");
-         // }
          try{
             [records, fields] = await db.query("select * from movie_info where movie_seq in(13,57,69,67,70)");
          }catch(err){
@@ -180,9 +142,9 @@ module.exports = function(app)
       res.end();
    });
 
-   // app.get("/insertMovie",(req,res)=>{
-   //    res.render("insertMovie.ejs");
-   // });
+   app.get("/insertMovie",(req,res)=>{
+      res.render("insertMovie.ejs");
+   });
    
    /**
     * 20191210 현규
@@ -194,27 +156,6 @@ module.exports = function(app)
       //console.log(req.body.movieSeq);
       //디비에서 해당 seq 영화정보 가져오기
       let func = async function(){
-         // await db.query("select * from movie_info where movie_seq = "+req.body.movieSeq+";", function(err, result){
-         //    if(err){
-         //       console.log(err);
-         //       //res.send(err);
-         //       res.redirect("/");
-         //    }else{
-         //       //console.log(result);
-         //       //console.log(replies);
-         //       //console.log(replies.length);
-         //       res.render("movieView", {
-         //          movieSeq:      result[0].movie_seq,
-         //          movieImage:    result[0].image_url,
-         //          movieTitle:    result[0].movie_title,
-         //          movieDirector: result[0].movie_director,
-         //          movieDesc:     result[0].movie_desc,
-         //          userRating:    result[0].user_rating,
-         //          releaseDate:   result[0].release_date,
-         //          streamingCnt:  result[0].streaming_cnt
-         //       });
-         //    }
-         // });
          try{
             [records, fields] = await db.query("select * from movie_info where movie_seq = "+req.body.movieSeq);
          }catch(err){
@@ -244,16 +185,6 @@ module.exports = function(app)
 
    app.get("/movie/getMovieReplyList",(req,res) => {
       let func = async function(){
-         // await db.query("select * from movie_reply_info where movie_seq = "+req.query.movieSeq+";", function(err, result){
-         //    if(err){
-         //       console.log(err);
-         //       //res.send(err);
-         //       res.redirect("/");
-         //    }else{
-         //       console.log(result);
-         //       res.send(result);
-         //    }
-         // });
          try{
             [records, fields] = await db.query("select * from movie_reply_info where movie_seq = "+req.query.movieSeq);
          }catch(err){
