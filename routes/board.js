@@ -1,4 +1,4 @@
-﻿const db = require(__modules+'/database');
+const db = require(__modules+'/database');
 const router = require('express').Router();
 
 //주소를 lsit로 입력 받아도 page로 이동되도록
@@ -8,7 +8,7 @@ const router = require('express').Router();
 // });
 
 //주소를 lsit로 입력 받아도 page로 이동되도록
-router.get("/",(req,res)=>
+router.get("/board",(req,res)=>
 {
     res.redirect('/board/page/1');
 });

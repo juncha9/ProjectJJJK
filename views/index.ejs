@@ -143,23 +143,25 @@
     function goView(movieSeq){
         frm.movieSeq.value = movieSeq;
         goPage("/getMovieView");
+        //goPage("/movie/detail");
     }
 
      /**
      * 20191210 현규
      * submit() call
-     * 전체 form은 header.ejs와 footer.ejs에서 열고 닫힌다.
+     * 전체 form은 header.ejs와 footer.ejs에서 열고 닫힌다. -> drop 
      * 폼 이동을 간편하게 하기 위함
      */
     function goPage(forwardStr){
         frm.action = forwardStr;
+        frm.method = "post"
         frm.target = "_self";
         frm.submit();
     }
 
 </script>
 
-<form name="frm" method="post" action="">
+<form name="frm" method="" action="">
 <!-- movieSeq넘기기 위한 히든값입니다. -->
 <input type="hidden" name="movieSeq"/>
 <!-- 
