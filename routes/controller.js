@@ -168,7 +168,7 @@ module.exports = function(app)
    app.get("/hidden/insertMovie", (req,res) => {
       let fn = async function(){
          try{
-            await db.query("insert into movie_info(movie_name, movie_director, release_date, image_url, user_rating, insert_date) values (?,?,?,?,?,sysdate());",
+            [result] = await db.query("insert into movie_info(movie_name, movie_director, release_date, image_url, user_rating, insert_date) values (?,?,?,?,?,sysdate());",
             [((req.query.title).replace("<b>","")).replace("</b>",""), req.query.director, req.query.pubDate, req.query.image, req.query.userRating]);
          }catch(err){
             console.log(err);
