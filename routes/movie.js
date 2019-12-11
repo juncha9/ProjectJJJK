@@ -10,7 +10,6 @@ router.get("/list",(req,res)=>
     {
         try
         {
-            
             let page;
             if(!req.query.page)
             {
@@ -52,23 +51,23 @@ router.get("/list",(req,res)=>
 
             //페이지 계산
 
-            [movies, fields] = await db.query("select * from movie_info limit ?,?",[(page-1)*listCount,listCount]);
-            if(movies && movies.length>0)
+            [movies, fields] = await db.query("SELECT * FROM movie_info LIMIT ?,?",[(page-1)*listCount,listCount]);
+            if(movies && movies.length>=0)
             {
                 res.render('movie_list',{page:page, startPage: startPage, endPage: endPage, movies: movies, totalPage: totalPage });
             }
             else
             {
-                console.log('Movie is not exist');
+                let err = 'Something wrong';
                 //에러 발생
-                res.redirect('/');
+                res.render('error',{error:err});
             }
 
         }
         catch(err)
         {   
             console.log(err);
-            res.redirect('/');
+            res.render('error',{error:err});
         }
         
     }();
@@ -77,28 +76,51 @@ router.get("/list",(req,res)=>
 
 router.get('/detail',(req,res)=>
 {
-    var movieSeq = req.query.seq;
+    if(!req.query.seq)
+    {
+        res.redirect
+        return;
+    }
+    let movieSeq = req.query.seq;
+    
     //db.query는 프로미즈로구현되어있기때문에 await를 사용하여 리턴받기로 한다.
     let fn = async function()
     {
         //await는 필수적으로 async 함수내에 있어야한다.
         try
         {
-            [movies, movieFields] = await db.query('SELECT * FROM movie_info WHERE movie_seq=?',[movieSeq]); 
-            [replies, replyFields] = await db.query("SELECT r.reply_contents, r.movie_rating, DATE_FORMAT(r.insert_date,'%Y-%m-%d') AS insert_date, user_name FROM movie_reply_info r INNER JOIN user_info u ON u.user_seq = r.user_seq where movie_seq=?",[movieSeq]);
-          
+            let sql = 'SELECT * FROM movie_info WHERE movie_seq=?';
+            [movies, movieFields] = await db.query(sql,[movieSeq]); 
+            sql = "SELECT R.movie_reply_seq, R.reply_contents, R.movie_rating, DATE_FORMAT(R.insert_date,'%Y-%m-%d') AS insert_date, DATE_FORMAT(R.modify_date,'%Y-%m-%d') AS modify_date, U.user_id, U.user_seq " +
+            "FROM movie_reply_info R INNER JOIN user_info U ON U.user_seq = R.user_seq " +
+            "WHERE R.movie_seq=?";
+            [replies, replyFields] = await db.query(sql,[movieSeq]);
+            let hasMovie = false;
+            if(req.session.userSeq)
+            {
+                let userSeq = req.session.userSeq;
+                sql = "SELECT count(*) "+
+                "FROM user_library L INNER JOIN user_info U ON L.user_seq=U.user_seq "+
+                "WHERE L.user_seq=? && L.movie_seq=?";
+                [rCount, fields] = await db.query(sql,[userSeq,movieSeq]);
+                if(rCount && rCount.count > 0)
+                {
+                    hasMovie = true;
+                }
+            }
             //await를 사용하면 쿼리를 마치고 리턴값이 올때까지 기다린다.
             //만약 응답이없으면 timeout이 2초로 설정되있기에 2초뒤에 catch err로 전달된다.
             if(movies.length>0)
             {
-                res.render('movie_detail.ejs',{movie: movies[0], replies: replies});    
+                res.render('movie_detail.ejs',{movie: movies[0], replies: replies, hasMovie: hasMovie});    
             }
         }
         catch(err)
         {
             //에러발생시는 여기로
             console.error(err);
-            res.redirect("/");
+            res.render('error',{error:err});
+            
         }
     }();//마지막에 ()를 추가함으로 fn()을 실행
 })
@@ -106,32 +128,142 @@ router.get('/detail',(req,res)=>
 router.post('/add_reply',(req,res)=>{
     let fn = async function()
     {
-        console.log('add_reply');
-        movieSeq = req.body.movieSeq;
-        userSeq = req.body.userSeq;
-        replyContents = req.body.replyContents;
-        movieRating = req.body.movieRating;
+        
+        let userSeq = req.session.userSeq;
+        let movieSeq = req.body.movieSeq;
+        let replyContents = req.body.replyContents;
+        let movieRating = req.body.movieRating;
         try
         {
             let sql = "INSERT INTO movie_reply_info(movie_seq,user_seq,reply_contents,movie_rating,insert_date) values(?,?,?,?,now())";
-            [result, test] = await db.query(sql,[movieSeq,userSeq,replyContents,movieRating]);    
-            if(result && result.serverStatus === 2)
+            [result] = await db.query(sql,[movieSeq,userSeq,replyContents,movieRating]);   
+            if(result && result.affectedRows > 0)
             {
-                res.send({result:true});
+                res.send({result:'success'});
             }
             else
             {
-                res.send({result:false});
+                res.send({result:'affected rows:'+result.affectedRows});
             }
         }
         catch(err)
         {
             console.error(err);
-            res.send({result:false});
+            res.send({error:err});
         }
 
     }();
 })
+
+router.post('/delete_reply',(req,res)=>{
+    let fn = async function()
+    {
+        let resObejct;
+        let userSeq = req.session.userSeq;
+        let movieReplySeq = req.body.movieReplySeq;
+        try
+        {
+            let sql = "DELETE FROM movie_reply_info WHERE movie_reply_seq = ? AND user_seq = ?";
+            [result] = await db.query(sql,[movieReplySeq,userSeq]);    
+            console.log(result); 
+            
+            if(result && result.affectedRows > 0)
+            {
+                res.send({result:'success'});
+            }
+            else
+            {
+                res.send({result:'affected rows:'+result.affectedRows});               
+            }
+        }
+        catch(err)
+        {
+            console.error(err);
+            res.send({error:err});
+        }
+
+    }();
+})
+
+router.post('/rent_movie',(req,res)=>{
+    let fn = async function()
+    {
+        try
+        {
+            let userSeq = req.session.userSeq;
+            if(!userSeq)
+            {
+                res.send({result:'nouser'});
+                return;
+            }
+            let movieSeq = req.body.movieSeq;
+            let sql = "SELECT count(*) "+
+            "FROM user_library L INNER JOIN user_info U ON L.user_seq=U.user_seq "+
+            "WHERE L.user_seq=? && L.movie_seq=?";
+            [rCount, fields] = await db.query(sql,[userSeq,movieSeq]);
+            if(rCount.count > 0)
+            {
+                res.send({result:'overlap'});
+                return;
+            }
+            sql = "INSERT INTO user_library(user_seq,movie_seq,insert_date) VALUES(?,?,now())";
+            [result] = await db.query(sql,[userSeq,movieSeq]);
+            if(result && result.affectedRows > 0)
+            {
+                res.send({result:'success'});
+            }
+            else
+            {
+                res.send({result:'failed, affected rows:'+result.affectedRows});
+            }
+        }
+        catch(err)
+        {
+            console.log(err);
+            res.send({error:err});
+        }
+    }
+});
+
+router.post('/cancel_movie',(req,res)=>{
+    let fn = async function()
+    {
+        try
+        {
+            let userSeq = req.session.userSeq;
+            if(!userSeq)
+            {
+                res.send({result:'nouser'});
+                return;
+            }
+            let movieSeq = req.body.movieSeq;
+            let sql = "SELECT count(*) "+
+            "FROM user_library L INNER JOIN user_info U ON L.user_seq=U.user_seq "+
+            "WHERE L.user_seq=? && L.movie_seq=?";
+            [rCount, fields] = await db.query(sql,[userSeq,movieSeq]);
+            if(rCount.count <= 0)
+            {
+                res.send({result:'empty'});
+                return;
+            }
+            sql = "DELETE FROM user_library WHERE user_seq=? AND movie_seq=?";
+            [result] = await db.query(sql,[userSeq,movieSeq]);
+            if(result && result.affectedRows > 0)
+            {
+                res.send({result:'success'});
+            }
+            else
+            {
+                res.send({result:'failed, affected rows:'+result.affectedRows});
+            }
+        }
+        catch(err)
+        {
+            console.log(err);
+            res.send({error:err});
+        }
+    }
+});
 
 
 module.exports = router;

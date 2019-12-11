@@ -1,68 +1,116 @@
-<div class="nav-bar" style="top:0;">
-    <a href="">
-        <div id="nav-btn-library" class="nav-btn">
-            라이브러리
-        </div>
-    </a>
-    <a href="/auth?mode=me">
-        <div id="nav-btn-me" class="nav-btn">
-            <%= session && session.isLogin?session.userID:null %>
-        </div>
-    </a>
-    <a href="/auth?mode=logout">
-        <div id="nav-btn-logout" class="nav-btn">
-            로그아웃
-        </div>
-    </a>
-    <a href="/auth?mode=login">
-        <div id="nav-btn-login" class="nav-btn">
-            로그인
-        </div>
-    </a>
-    <a href="/auth?mode=register">
-        <div id="nav-btn-register" class="nav-btn">
-            회원가입
-        </div>
-    </a>
-</div>
+<div class="topMenuContainer">
 
-
-<div id="topMenuContainer">
-
-    <div id="topInfo" class="topInfo">
-        <div style="float:left;margin:3px;">
-            <!-- <img src="" class="" onclick="location.href='/'" /> -->
-            <p style="font-size:8px;" onclick="location.href='/'">여기 로고와야함</p>
-        </div>
-    </div>
-    <div id="topMenu" class="topMenu">
+    <button class="burger" onclick="SwitchVerticalMenu()">
+        햄
+    </button>
+    <div class="topMenu">
         <!-- 대메뉴 설정 -->
-        <a href="/">        
-            <div class="topMenuBtn" onclick="">메인</div>
+        <a href="/">
+            <div class="topMenuBtn">
+                메인
+            </div>
         </a>
         <a href="/movie/list">
-            <div class="topMenuBtn" onclick="">영화목록</div>
+            <div class="topMenuBtn">
+                영화목록
+            </div>
         </a>
-        <div class="topMenuBtn" onclick="location.href='/board/list'">게시판</div>
-
-        <div class="topMenuBtn" onclick="">대메뉴4</div>
+        <a href="/movie/list">
+            <div class="topMenuBtn">
+                게시판
+            </div>
+        </a>
+        <% if(session && session.isLogin) { %>
+        <a href="/auth?mode=me">
+            <div class="topMenuBtn">
+                라이브러리
+            </div>
+        </a>
+        <a href="/auth?mode=me">
+            <div class="topMenuBtn">
+                <%= session && session.isLogin?session.userID:null %>
+            </div>
+        </a>
+        <a href="/auth?mode=logout">
+            <div class="topMenuBtn">
+                로그아웃
+            </div>
+        </a>
+        <%} else {%>
+        <a href="/auth?mode=login">
+            <div class="topMenuBtn">
+                로그인
+            </div>
+        </a>
+        <a href="/auth?mode=register">
+            <div class="topMenuBtn">
+                회원가입
+            </div>
+        </a>
+        <% } %>
     </div>
-
-
+    <div class="verticalMenu">
+        <!-- 대메뉴 설정 -->
+        <a href="/">
+            <div class="topMenuBtn">
+                메인
+            </div>
+        </a>
+        <a href="/movie/list">
+            <div class="topMenuBtn">
+                영화목록
+            </div>
+        </a>
+        <a href="/movie/list">
+            <div class="topMenuBtn">
+                게시판
+            </div>
+        </a>
+        <% if(session && session.isLogin) { %>
+        <a href="/auth?mode=me">
+            <div class="topMenuBtn">
+                라이브러리
+            </div>
+        </a>
+        <a href="/auth?mode=me">
+            <div class="topMenuBtn">
+                <%= session && session.isLogin?session.userID:null %>
+            </div>
+        </a>
+        <a href="/auth?mode=logout">
+            <div class="topMenuBtn">
+                로그아웃
+            </div>
+        </a>
+        <%} else {%>
+        <a href="/auth?mode=login">
+            <div class="topMenuBtn">
+                로그인
+            </div>
+        </a>
+        <a href="/auth?mode=register">
+            <div class="topMenuBtn">
+                회원가입
+            </div>
+        </a>
+        <% } %>
+    </div>
+    <script>
+        var isMenuOpen = false;
+        $('.verticalMenu').hide();
+        function SwitchVerticalMenu()
+        {
+            isMenuOpen = !isMenuOpen;
+            if (isMenuOpen) 
+            {
+                $('.verticalMenu').show();
+                $('.burger').addClass('on');
+                
+            } else 
+            {
+                $('.verticalMenu').hide();
+                $('.burger').removeClass('on');
+            }
+        }
+    </script>
 </div>
-
-<script type="text/javascript">
-    <% if(session && session.isLogin) { %>
-        $('#nav-btn-library').show();
-        $('#nav-btn-me').show();
-        $('#nav-btn_logout').show();
-        $('#nav-btn-login').hide();
-        $('#nav-btn-register').hide();
-    <% } else {%>
-        $('#nav-btn-library').hide();
-        $('#nav-btn-me').hide();
-        $('#nav-btn-logout').hide();
-        $('#nav-btn-login').show();
-        $('#nav-btn-register').show();
-    <% } %>
-</script>

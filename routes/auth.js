@@ -25,8 +25,8 @@ router.get("/",(req,res)=>
             }
             catch(err)
             {
-                console.error(err);
-                res.redirect('/');
+                console.log(err);
+                res.render('error',{error:err});
             }        
         }();
     }
@@ -62,12 +62,15 @@ router.post("/login",(req,res)=>{
             }
             else
             {
-                console.log("login failed");
+                let err = "login failed";
+                res.render('error',{error:err});
+
             }
         }
         catch(err)
         {
-            console.error(err);
+            console.log(err);
+            res.render('error',{error:err});
         }        
     }();
 
@@ -83,7 +86,8 @@ router.post("/check_id",(req,res)=>{
         }
         catch(err)
         {
-            console.error(err);
+            console.log(err);
+            res.render('error',{error:err});
         }
         if(records && records.length <= 0)
         {
@@ -110,9 +114,6 @@ router.post("/register",(req,res)=>
             let userEmail = req.body.userEmail;
             if(!userID || !userPassword || !userName)
             {
-                console.log(userID);
-                console.log(userPassword);
-                console.log(userName);
                 throw "Error : Necessary field is undefined on register";
             }
             await db.query("INSERT into user_info(user_id,user_pwd,user_name,user_mobile,user_email,insert_date) values(?,password(?),?,?,?,now());",
@@ -121,8 +122,8 @@ router.post("/register",(req,res)=>
         }
         catch(err)
         {
-            console.error(err);
-            res.redirect("/");
+            console.log(err);
+            res.render('error',{error:err});
         }
     }();
 });

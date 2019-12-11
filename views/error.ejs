@@ -1,0 +1,14 @@
+<%- include ('./common/header'); -%>
+<center>
+    <div class="h5">에러가 발생했습니다.</div>
+    <div class="h5">3초후 이동합니다.</div>
+    <div class="h5"><%=error%></div>
+</center>
+<script>
+    setTimeout('next()', 3000);
+    function next()
+    {
+        location.href = "/";
+    }
+</script>
+<%- include ('./common/footer'); -%>
