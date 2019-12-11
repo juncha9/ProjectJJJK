@@ -57,21 +57,37 @@ module.exports = function(app)
     * 주차까지 분리하고싶었지만 데이터 한계상 2차가공이 필요함 -> drop결정
     * new : 올해기준으로 streaming_cnt top5 보여주기
     */
-   app.get("/movie/getPopularMovieList", (req,res) => {
+   app.get("/movie/getPopularMovieList", (req,res,next) => {
       //db.query("select * from movie_info where release_date = 2019 order by user_rating desc limit 0,5;", function(err, result){
       let func = async function(){
+         // try{
+         //    await db.query("select * from movie_info where release_date = 2019 and delete_yn = 'N' order by streaming_cnt desc limit 0,5;", function(err, result){
+         //       if(err){
+         //          console.log(err);
+         //          res.send(err);
+         //       }else{
+         //          console.log(result);
+         //          res.send(result);
+         //       }
+         //    });
+         // }catch(exception){
+         //    console.log(exception);
+         //    res.redirect("/");
+         // }
+
          try{
-            await db.query("select * from movie_info where release_date = 2019 and delete_yn = 'N' order by streaming_cnt desc limit 0,5;", function(err, result){
-               if(err){
-                  console.log(err);
-                  res.send(err);
-               }else{
-                  console.log(result);
-                  res.send(result);
-               }
-            });
-         }catch(exception){
-            console.log(exception);
+            [records, fields] = await db.query("select * from movie_info where release_date = 2019 and delete_yn = 'N' order by streaming_cnt desc limit 0,5;");
+         }catch(err){
+            console.log(err);
+            res.redirect("/");
+         }
+         if(records && records.length <= 0){
+            console.log("데이터없음");
+            res.send();
+         }else{
+            console.log(records.length);
+            //res.redirect("/");
+            res.send(records);
          }
       }();
    });
@@ -85,18 +101,33 @@ module.exports = function(app)
     */
    app.get("/movie/getLatestMovieList",(req,res) => {
       let func = async function(){
+         // try{
+         //    await db.query("select * from movie_info where movie_seq in(13,57,69,67,70);", function(err, result){
+         //       if(err){
+         //          console.log(err);
+         //          res.send(err);
+         //       }else{
+         //          console.log(result);
+         //          res.send(result);
+         //       }
+         //    });
+         // }catch(exception){
+         //    console.log(exception);
+         //    res.redirect("/");
+         // }
          try{
-            await db.query("select * from movie_info where movie_seq in(13,57,69,67,70);", function(err, result){
-               if(err){
-                  console.log(err);
-                  res.send(err);
-               }else{
-                  console.log(result);
-                  res.send(result);
-               }
-            });
-         }catch(exception){
-            console.log(exception);
+            [records, fields] = await db.query("select * from movie_info where movie_seq in(13,57,69,67,70)");
+         }catch(err){
+            console.log(err);
+            res.redirect("/");
+         }
+         if(records && records.length <= 0){
+            console.log("데이터없음");
+            res.send();
+         }else{
+            console.log(records.length);
+            //res.redirect("/");
+            res.send(records);
          }
       }();
    });
@@ -163,111 +194,81 @@ module.exports = function(app)
       //console.log(req.body.movieSeq);
       //디비에서 해당 seq 영화정보 가져오기
       let func = async function(){
-         await db.query("select * from movie_info where movie_seq = "+req.body.movieSeq+";", function(err, result){
-            if(err){
-               console.log(err);
-               //res.send(err);
-               res.redirect("/");
-            }else{
-               //console.log(result);
-               //console.log(replies);
-               //console.log(replies.length);
-               res.render("movieView", {
-                  movieSeq:      result[0].movie_seq,
-                  movieImage:    result[0].image_url,
-                  movieTitle:    result[0].movie_title,
-                  movieDirector: result[0].movie_director,
-                  movieDesc:     result[0].movie_desc,
-                  userRating:    result[0].user_rating,
-                  releaseDate:   result[0].release_date,
-                  streamingCnt:  result[0].streaming_cnt
-               });
-            }
-         });
+         // await db.query("select * from movie_info where movie_seq = "+req.body.movieSeq+";", function(err, result){
+         //    if(err){
+         //       console.log(err);
+         //       //res.send(err);
+         //       res.redirect("/");
+         //    }else{
+         //       //console.log(result);
+         //       //console.log(replies);
+         //       //console.log(replies.length);
+         //       res.render("movieView", {
+         //          movieSeq:      result[0].movie_seq,
+         //          movieImage:    result[0].image_url,
+         //          movieTitle:    result[0].movie_title,
+         //          movieDirector: result[0].movie_director,
+         //          movieDesc:     result[0].movie_desc,
+         //          userRating:    result[0].user_rating,
+         //          releaseDate:   result[0].release_date,
+         //          streamingCnt:  result[0].streaming_cnt
+         //       });
+         //    }
+         // });
+         try{
+            [records, fields] = await db.query("select * from movie_info where movie_seq = "+req.body.movieSeq);
+         }catch(err){
+            console.log(err);
+            res.redirect("/");
+         }
+         if(records && records.length <= 0){
+            console.log("데이터없음");
+            res.send();
+         }else{
+            console.log(records.length);
+            //res.redirect("/");
+            //res.send(records);
+            res.render("movieView", {
+               movieSeq:      records[0].movie_seq,
+               movieImage:    records[0].image_url,
+               movieTitle:    records[0].movie_title,
+               movieDirector: records[0].movie_director,
+               movieDesc:     records[0].movie_desc,
+               userRating:    records[0].user_rating,
+               releaseDate:   records[0].release_date,
+               streamingCnt:  records[0].streaming_cnt
+            });
+         }
       }();
    });
 
    app.get("/movie/getMovieReplyList",(req,res) => {
       let func = async function(){
-         await db.query("select * from movie_reply_info where movie_seq = "+req.query.movieSeq+";", function(err, result){
-            if(err){
-               console.log(err);
-               //res.send(err);
-               res.redirect("/");
-            }else{
-               console.log(result);
-               res.send(result);
-            }
-         });
+         // await db.query("select * from movie_reply_info where movie_seq = "+req.query.movieSeq+";", function(err, result){
+         //    if(err){
+         //       console.log(err);
+         //       //res.send(err);
+         //       res.redirect("/");
+         //    }else{
+         //       console.log(result);
+         //       res.send(result);
+         //    }
+         // });
+         try{
+            [records, fields] = await db.query("select * from movie_reply_info where movie_seq = "+req.query.movieSeq);
+         }catch(err){
+            console.log(err);
+            res.redirect("/");
+         }
+         if(records && records.length <= 0){
+            console.log("데이터없음");
+            res.end();
+         }else{
+            console.log(records.length);
+            res.send(result);
+         }
       }();
    });
-
-
-
-
-
-   app.post("/movie/detail", (req,res) => {
-      //console.log(req.body.movieSeq);
-      //디비에서 해당 seq 영화정보 가져오기
-      let func = async function(){
-         await db.query("select * from movie_info where movie_seq = "+req.body.movieSeq+";", function(err, result){
-            if(err){
-               console.log(err);
-               //res.send(err);
-               res.redirect("/");
-            }else{
-               //console.log(result);
-               //console.log(replies);
-               //console.log(replies.length);
-               res.render("movie_detail", {
-                  movieImage:    result[0].image_url,
-                  movieTitle:    result[0].movie_title,
-                  movieDirector: result[0].movie_director,
-                  movieDesc:     result[0].movie_desc,
-                  userRating:    result[0].user_rating,
-                  releaseDate:   result[0].release_date,
-                  streamingCnt:  result[0].streaming_cnt
-               });
-            }
-         });
-      }();
-   });
-
-   // app.get("/movie/detail", (req,res) => {
-   //    //console.log(req.body.movieSeq);
-   //    var replies = db.query("select * from movie_reply_info where movie_seq = "+req.body.movieSeq);
-   //    console.log("하이");
-   //    console.log(replies);
-
-   //    //디비에서 해당 seq 영화정보 가져오기
-   //    let func = async function(){
-   //       await db.query("select * from movie_info where movie_seq = "+req.body.movieSeq+";", function(err, result){
-   //          if(err){
-   //             console.log(err);
-   //             res.send(err);
-   //          }else{
-   //             console.log(result);
-   //             //res.render("movieView",{movieTitle : result.movie_title});
-   //             //res.send(result);
-   //             res.render("movie_detail", {
-   //                movieImage:    result[0].image_url,
-   //                movieTitle:    result[0].movie_title,
-   //                movieDirector: result[0].movie_director,
-   //                movieDesc:     result[0].movie_desc,
-   //                userRating:    result[0].user_rating,
-   //                releaseDate:   result[0].release_date,
-   //                streamingCnt:  result[0].streaming_cnt    
-   //             });
-   //          }
-   //       });
-   //    }();
-   // });
-
-   // app.get("/movieView", (req,res) => {
-   //    console.log("하이");
-   //    res.render("movieView.ejs");
-   // });
-
 
     //컨트롤러 분리
    
