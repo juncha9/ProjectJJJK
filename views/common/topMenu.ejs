@@ -15,18 +15,18 @@
                 영화목록
             </div>
         </a>
-        <a href="/movie/list">
+        <a href="/board">
             <div class="topMenuBtn">
                 게시판
             </div>
         </a>
         <% if(session && session.isLogin) { %>
-        <a href="/auth?mode=me">
+        <a href="/movie/library">
             <div class="topMenuBtn">
                 라이브러리
             </div>
         </a>
-        <a href="/auth?mode=me">
+        <a href="/auth?mode=update">
             <div class="topMenuBtn">
                 <%= session && session.isLogin?session.userID:null %>
             </div>
@@ -61,18 +61,18 @@
                 영화목록
             </div>
         </a>
-        <a href="/movie/list">
+        <a href="/board">
             <div class="topMenuBtn">
                 게시판
             </div>
         </a>
         <% if(session && session.isLogin) { %>
-        <a href="/auth?mode=me">
+        <a href="/movie/library">
             <div class="topMenuBtn">
                 라이브러리
             </div>
         </a>
-        <a href="/auth?mode=me">
+        <a href="/auth?mode=update">
             <div class="topMenuBtn">
                 <%= session && session.isLogin?session.userID:null %>
             </div>

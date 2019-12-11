@@ -4,16 +4,27 @@
 <link href="/stylesheets/movie_list.css" rel="stylesheet" type="text/css">
 <div class="movieListContainer">
     <div class="page-head">
-        <div>
-            영화리스트
-        </div>
+        <%if(isLibrary===true){%>
+            <div>
+                라이브러리
+            </div>
+        <% } else {%>
+            <div>
+                영화리스트
+            </div>
+        <% } %>
+
     </div>
 
     <div class="movie-page-index">
         <% if(startPage-1 > 0) { %>
-            <a id="link-index" href="/movie/list?page=<%=startPage-1%>">
-                이전
-            </a>
+            <%if(isLibrary===true){%>
+                <a id="link-index" href="/movie/library?page=<%=startPage-1%>">
+            <% } else {%>
+                <a id="link-index" href="/movie/list?page=<%=startPage-1%>">
+            <% } %>
+                    이전
+                </a>
         <% } %>
         <% for (var i = startPage; i<= endPage; i++ ) {%>
             <% if( i == page) {%>
@@ -21,15 +32,23 @@
                     <%=i%>
                 </span>
             <% } else {%>
-                <a id="link-index" href="/movie/list?page=<%=i%>">
-                    <%=i%>
-                </a>
+                <%if(isLibrary===true){%>
+                    <a id="link-index" href="/movie/library?page=<%=i%>">
+                <% } else {%>
+                    <a id="link-index" href="/movie/list?page=<%=i%>">
+                <% } %>
+                        <%=i%>
+                    </a>
             <% } %>
         <% } %>
         <% if(endPage+1 <= totalPage) { %>
-            <a id="link-index" href="/movie/list?page=<%=endPage+1%>">
-                다음
-            </a>
+            <%if(isLibrary===true){%>
+                <a id="link-index" href="/movie/library?page=<%=endPage+1%>">
+            <% } else {%>
+                <a id="link-index" href="/movie/list?page=<%=endPage+1%>">
+            <% } %>
+                    다음
+                </a>
         <% } %>
     </div>
     

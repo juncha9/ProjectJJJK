@@ -1,0 +1,33 @@
+﻿<%- include ('./common/header'); -%>
+<%- include ('./common/topMenu'); -%>
+<link rel='stylesheet' href='/stylesheets/board.css' />
+<br><br><br>
+<h1><%= title %></h1>
+<br><br>
+<tr>
+    <td>
+        <br>
+        <a href="/board/page/1"><button>Back</button></a>
+        <br><br>
+    </td>
+</tr>
+
+<form action="/board/write" method="post">
+    <table>
+        <tr>
+            <td>제목</td>
+            <td><input type="text" name="board_title" id="board_title" required /></td>
+        </tr>
+        <tr>
+            <td>내용</td>
+            <td><textarea name="board_contents" id="board_contents" style="width:80%;" rows="10" required></textarea></td>
+        </tr>
+    </table>
+    <br>
+    <tr>
+        <td colspan="2">
+            <button type="submit">Submit</button>
+        </td>
+    </tr>
+</form>
+<%- include ('./common/footer'); -%>

@@ -10,6 +10,7 @@ router.get("/list",(req,res)=>
     {
         try
         {
+            //페이지 관련 부분 
             let page;
             if(!req.query.page)
             {
@@ -24,6 +25,13 @@ router.get("/list",(req,res)=>
             const listCount = 10;
             
             [records,fields] = await db.query('SELECT count(*) as count FROM movie_info');
+            if(!(records && records[0]))
+            {
+                let err = 'Something wrong';
+                //에러 발생
+                res.render('error',{error:err});
+                return;
+            }
             let totalCount = records[0].count;
             let totalPage = parseInt(totalCount/listCount); //페이지 갯수
             
@@ -51,16 +59,19 @@ router.get("/list",(req,res)=>
 
             //페이지 계산
 
+            //페이지 관련 부분 
+
             [movies, fields] = await db.query("SELECT * FROM movie_info LIMIT ?,?",[(page-1)*listCount,listCount]);
             if(movies && movies.length>=0)
             {
-                res.render('movie_list',{page:page, startPage: startPage, endPage: endPage, movies: movies, totalPage: totalPage });
+                res.render('movie_list',{page:page, startPage: startPage, endPage: endPage, movies: movies, totalPage: totalPage, isLibrary:false });
             }
             else
             {
                 let err = 'Something wrong';
                 //에러 발생
                 res.render('error',{error:err});
+                return;
             }
 
         }
@@ -74,12 +85,98 @@ router.get("/list",(req,res)=>
 
 });
 
+router.get('/library',(req,res)=>
+{
+    var userSeq = req.session.userSeq;
+    if(!userSeq)
+    {
+        res.render('error',{error:'라이브러리는 로그인 후에 이용가능합니다.'});
+        return;
+    }
+    let fn = async function(){
+        try
+        {
+            //페이지 관련 전처리
+            let page;
+            if(!req.query.page)
+            {
+                page = 1;
+            }
+            else
+            {
+                page = req.query.page;
+            }
+            //보여줄 항목의 갯수
+            const listCount = 10;
+            let sql = "SELECT count(*) as count FROM DB.user_library L "+
+            "INNER JOIN DB.user_info U ON L.user_seq=U.user_seq "+
+            "INNER JOIN DB.movie_info M ON L.movie_seq = M.movie_seq "+
+            "WHERE U.user_seq=?";
+            [records,fields] = await db.query(sql,userSeq);
+            if( !(records && records[0]) )
+            {
+                let err = 'Something wrong';
+                //에러 발생
+                res.render('error',{error:err});
+                return;
+            }
+            let totalCount = records[0].count;
+            let totalPage = parseInt(totalCount/listCount); //페이지 갯수
+
+            if(totalCount % listCount > 0 )
+            {
+                totalPage++;
+            }
+
+            //페이지 계산
+            const pageCount = 10; //보여줄 페이지 갯수
+            if(page > totalPage)
+            {
+                page = totalPage;
+            }
+            let startPage = (parseInt((page - 1) / pageCount) * pageCount) + 1;
+            let endPage = startPage + pageCount - 1;
+            if (endPage > totalPage) 
+            {
+                endPage = totalPage;
+            }
+
+            console.log('page:'+page+'totalPage:'+totalPage+'totalCount:'+totalCount+'startPage:'+startPage+'endPage:'+endPage);
+            //페이지 계산
+
+            //페이지 관련 전처리
+            sql = "SELECT * FROM DB.user_library L "+
+            "INNER JOIN DB.user_info U ON L.user_seq=U.user_seq "+
+            "INNER JOIN DB.movie_info M ON L.movie_seq = M.movie_seq "+
+            "WHERE U.user_seq=? LIMIT ?,?";
+            [movies, fields] = await db.query(sql,[userSeq,(page-1)*listCount,listCount]);
+            if(movies && movies.length>=0)
+            {
+                res.render('movie_list',{page:page, startPage: startPage, endPage: endPage, movies: movies, totalPage: totalPage, isLibrary:true});
+            }
+            else
+            {
+                let err = 'Something wrong';
+                //에러 발생
+                res.render('error',{error:err});
+                return;
+            }
+        }
+        catch(err)
+        {            
+            console.log(err);
+            res.render('error',{error:err});
+        }
+    
+    }();
+});
+
+
 router.get('/detail',(req,res)=>
 {
     if(!req.query.seq)
     {
-        res.redirect
-        return;
+        res.render('error',{error:'영화정보 쿼리가 존재하지 않습니다.'});
     }
     let movieSeq = req.query.seq;
     
@@ -99,11 +196,11 @@ router.get('/detail',(req,res)=>
             if(req.session.userSeq)
             {
                 let userSeq = req.session.userSeq;
-                sql = "SELECT count(*) "+
+                sql = "SELECT count(*) as count "+
                 "FROM user_library L INNER JOIN user_info U ON L.user_seq=U.user_seq "+
                 "WHERE L.user_seq=? && L.movie_seq=?";
-                [rCount, fields] = await db.query(sql,[userSeq,movieSeq]);
-                if(rCount && rCount.count > 0)
+                [records, fields] = await db.query(sql,[userSeq,movieSeq]);
+                if(records && records[0].count > 0)
                 {
                     hasMovie = true;
                 }
@@ -123,7 +220,7 @@ router.get('/detail',(req,res)=>
             
         }
     }();//마지막에 ()를 추가함으로 fn()을 실행
-})
+});
 
 router.post('/add_reply',(req,res)=>{
     let fn = async function()
@@ -153,7 +250,7 @@ router.post('/add_reply',(req,res)=>{
         }
 
     }();
-})
+});
 
 router.post('/delete_reply',(req,res)=>{
     let fn = async function()
@@ -183,7 +280,7 @@ router.post('/delete_reply',(req,res)=>{
         }
 
     }();
-})
+});
 
 router.post('/rent_movie',(req,res)=>{
     let fn = async function()
@@ -197,11 +294,11 @@ router.post('/rent_movie',(req,res)=>{
                 return;
             }
             let movieSeq = req.body.movieSeq;
-            let sql = "SELECT count(*) "+
+            let sql = "SELECT count(*) as count "+
             "FROM user_library L INNER JOIN user_info U ON L.user_seq=U.user_seq "+
             "WHERE L.user_seq=? && L.movie_seq=?";
-            [rCount, fields] = await db.query(sql,[userSeq,movieSeq]);
-            if(rCount.count > 0)
+            [records, fields] = await db.query(sql,[userSeq,movieSeq]);
+            if(records && records[0].count > 0)
             {
                 res.send({result:'overlap'});
                 return;
@@ -222,26 +319,26 @@ router.post('/rent_movie',(req,res)=>{
             console.log(err);
             res.send({error:err});
         }
-    }
+    }();
 });
 
 router.post('/cancel_movie',(req,res)=>{
     let fn = async function()
     {
+        let userSeq = req.session.userSeq;
         try
         {
-            let userSeq = req.session.userSeq;
             if(!userSeq)
             {
                 res.send({result:'nouser'});
                 return;
             }
             let movieSeq = req.body.movieSeq;
-            let sql = "SELECT count(*) "+
+            let sql = "SELECT count(*) as count "+
             "FROM user_library L INNER JOIN user_info U ON L.user_seq=U.user_seq "+
             "WHERE L.user_seq=? && L.movie_seq=?";
-            [rCount, fields] = await db.query(sql,[userSeq,movieSeq]);
-            if(rCount.count <= 0)
+            [records, fields] = await db.query(sql,[userSeq,movieSeq]);
+            if(records && records[0].count <= 0)
             {
                 res.send({result:'empty'});
                 return;
@@ -262,7 +359,7 @@ router.post('/cancel_movie',(req,res)=>{
             console.log(err);
             res.send({error:err});
         }
-    }
+    }();
 });
 
 

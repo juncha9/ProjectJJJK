@@ -5,6 +5,7 @@ var client_id = "JoRmTB4RuwMXAerDk0Yz";
 var client_secret = "MSlMuaCNgp";
 var auth = require(__routes+"/auth");
 var movie = require(__routes+"/movie");
+var board = require(__routes+"/board");
 
 module.exports = function(app)
 {
@@ -185,5 +186,7 @@ module.exports = function(app)
    app.use('/auth',auth);
 
    app.use('/movie',movie);
+   
+   app.use('/board',board);
 
 }

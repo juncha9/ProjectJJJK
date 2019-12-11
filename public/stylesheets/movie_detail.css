@@ -17,7 +17,6 @@
     max-width: 1000px;
     margin-top: 50px;
     padding: 10px 0px;
-
     font-weight: bold;
     border-bottom: 2px solid rgba(255, 0, 0, 0.5);
 
@@ -64,7 +63,16 @@
     display: flex;
     align-items: flex-end;
     flex-direction: column;
-    margin-bottom: 4%;
+    margin-bottom: 3%;
+}
+
+.movie-info #buttons
+{
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
+    margin-bottom: 3%;
+
 }
 
 
@@ -227,13 +235,23 @@
 .star.on {
     background-image: url(/star_on.png);
 }
-
+.nstar {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    background: url(/star_empty.png) no-repeat 0 0;
+    background-size: 40px;
+    margin-right: -3px;
+}
+.nstar.on {
+    background-image: url(/star_on.png);
+}
 
 
 @media (max-width: 768px)
 {
     .page-head {
-        margin-top: 20px;
+        margin-top: 10%;
         padding: 0 5%;
         min-width: 100%;
         widows: 100%;

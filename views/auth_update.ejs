@@ -1,0 +1,144 @@
+
+<%- include ('./common/header'); -%>
+<%- include ('./common/topMenu'); -%>
+
+<link href="/stylesheets/auth.css" rel="stylesheet" type="text/css">
+<form class="auth-form" onsubmit="return false">
+    <div class="auth-head">
+        <% if(chPassword) { %>
+        <p id="title" class="h5">비밀번호 변경</p>
+        <%} else { %>
+        <p id="title" class="h5">정보수정</p>
+        <% } %>
+        <button type="button" class="btn btn-secondary" onclick='OnChange()'>전환</button>
+    </div>
+    <div class="auth-detail">
+        <div class="form-group">
+            <label for="input-id">ID</label>
+            <div class="input-group">
+                <input class="form-control" id="input-id" name="userID" type="text" aria-describedby="require" placeholder="ID" value="<%=user.user_id%>" disabled />
+            </div>
+            <small id="require" class="form-text text-muted">필수 입력입니다.</small>
+        </div>
+        <div class="form-group">
+            <label for="input-password">현재 비밀번호</label>
+            <input class="form-control" id="input-cur-password" type="password" aria-describedby="require" placeholder="비밀번호" required></input>
+            <small id="require" class="form-text text-muted">필수 입력입니다.</small>
+        </div>
+        <% if(chPassword) {%>
+            <div class="form-group">
+                <label for="input-password">비밀번호</label>
+                <input class="form-control" id="input-password" type="password" aria-describedby="require" placeholder="비밀번호" required></input>
+                <small id="require" class="form-text text-muted">필수 입력입니다.</small>
+            </div>
+            <div class="form-group">
+                <label for="input-password2">비밀번호 확인 </label>
+                <input class="form-control" id="input-password2" type="password" aria-describedby="require" placeholder="비밀번호" required>
+                <small id="require" class="form-text text-muted">필수 입력입니다.</small>
+            </div>
+        <% } else {%>
+            <div class="form-group">
+                <label for="input-name">이름</label>
+                <input class="form-control" id="input-name" type="text" aria-describedby="require" placeholder="이름" value='<%=user.user_name%>' required />
+                <small id="require" class="form-text text-muted">필수 입력입니다.</small>
+            </div>
+            <div class="form-group">
+                <label for="input-mobile">연락처</label>
+                <input class="form-control" id="input-mobile" type="text" aria-describedby="require" placeholder="연락처" value='<%=user.user_mobile%>' />
+            </div>
+            <div class="form-group">
+                <label for="input-email">이메일</label>
+                <input class="form-control" id="input-email" type="text" aria-describedby="require" placeholder="이메일" value='<%=user.user_email%>'/>
+            </div>
+        <% } %>
+    </div>
+    <div class="auth-foot">
+        <% if(chPassword) { %>
+            <button type="submit" class="btn btn-primary" onclick="OnChPass()" >적용</button>
+        <%} else { %>
+            <button type="submit" class="btn btn-primary" onclick="OnUpdate()" >적용</button>
+        <% } %>
+    </div>
+</form>
+
+<script>
+    function OnChange()
+    {
+        <% if(chPassword) { %>
+        location.href='/auth?mode=update';
+        <%} else { %>
+        location.href='/auth?mode=chpass';
+        <% } %>
+    };
+    function OnChPass()
+    {
+        if($('#input-password').val() !== $('#input-password2').val())
+        {
+            alert('비밀번호가 서로 다릅니다.');
+            return;
+        }
+
+        $.ajax({
+            url:'/auth/chpass',
+            method:'POST',
+            data:{
+                curPassword:$('#input-cur-password').val(),
+                userPassword:$('#input-password').val(),
+            },
+        })
+        .done(function(res)
+        {
+            if(res.result === 'success')
+            {
+                alert('변경 성공');
+                location.href="/";
+            }
+            else if(res.result === 'diffpass')
+            {
+                alert('현재 비밀번호가 다릅니다.');
+            }
+            else
+            {
+                alert('변경 실패:'+res.result);
+            }
+        })
+        .fail(function(err)
+        {
+            alert('Error : ' + err.error);
+        });
+    };
+    function OnUpdate()
+    {
+        $.ajax({
+            url:'/auth/update',
+            method:'POST',
+            data:{
+                curPassword:$('#input-cur-password').val(),
+                userName:$('#input-name').val(),
+                userMobile:$('#input-mobile').val(),
+                userEmail:$('#input-email').val(),
+            },
+        })
+        .done(function(res)
+        {
+            if(res.result === 'success')
+            {
+                alert('변경 성공');
+                location.href="/";
+            }
+            else if(res.result === 'diffpass')
+            {
+                alert('현재 비밀번호가 다릅니다.');
+            }
+            else
+            {
+                alert('변경 실패:'+res.result);
+            }
+        })
+        .fail(function(err)
+        {
+            alert('Error : ' + err.error);
+        });
+    };
+</script>
+<%- include ('./common/footer'); -%>

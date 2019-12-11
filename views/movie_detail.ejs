@@ -6,11 +6,11 @@
 <div class="movieContainer">
 
     <div class="page-head">
-            <div>
-                영화정보
-            </div>
-            
+        <div>
+            영화정보
         </div>
+
+    </div>
 
     <div class="movie-screen">
         <div class="movie-image">
@@ -18,77 +18,151 @@
         </div>
         <div class="movie-info">
 
-                <div id="title"><%=movie.movie_title%></div>
-                <div id="sub-box">
-                        <div id="sub-desc">감독 : <%= movie.movie_director.split('|') %></div>
-                        <div id="sub-desc">장르 : <%= movie.movie_genre %></div>
-                        <div id="sub-desc">평점 : <%= movie.user_rating %></div>
-                </div>
-                <div id="desc"><%=movie.movie_desc %></div>
-                <div id="buttons">
-                    <%if(session && session.isLogin) {%>
-                        <%if(hasMovie){%>
-                            <button class="btn btn-danger" id="btn-cancel" onclick="OnCancelMovie(<%=movie.movie_seq%>)">반납</button>
-                        <% } else { %>
-                            <button class="btn btn-success" id="btn-rent" onclick="OnRentMovie(<%=movie.movie_seq%>)">대여</button>
-                        <% } %>
+            <div id="title"><%=movie.movie_title%></div>
+            <div id="sub-box">
+                <div id="sub-desc">감독 : <%= movie.movie_director.split('|') %></div>
+                <div id="sub-desc">장르 : <%= movie.movie_genre %></div>
+                <div id="sub-desc">평점 : <%= movie.user_rating %></div>
+            </div>
+            <div id="desc"><%=movie.movie_desc %></div>
+            <div id="buttons">
+                <%if(session && session.isLogin) {%>
+                    <%if(hasMovie){%>
+                        <button class="btn btn-danger" id="btn-cancel" onclick="OnCancelMovie(<%=movie.movie_seq%>)">반납</button>
+                    <% } else { %>
+                        <button class="btn btn-success" id="btn-rent" onclick="OnRentMovie(<%=movie.movie_seq%>)">대여</button>
                     <% } %>
-                </div>
+                <% } %>
+            </div>
         </div>
     </div>
     <div class="reply-list">
         <% for(var i = 0; i < replies.length; i++ ) { %>
-            <div class="reply-box">
-                <div id="date">
-                    <%= replies[i].modify_date?replies[i].modify_date:replies[i].insert_date%>
-                </div>
-                <div id="name">
-                    <%= replies[i].user_id%>
-                </div>
-                <div id="contents">
-                    <%= replies[i].reply_contents %>
-                </div>
-                <% if(session && session.isLogin && (session.userSeq === replies[i].user_seq)) {%>
-                    <div id="buttons">
-                        <button class="btn btn-danger" onclick="OnDeleteReply(<%=replies[i].movie_reply_seq%>)">삭제</button>
-                    </div>
+        <div class="reply-box">
+            <div class="star-box">
+                <% for(var s = 1; s<=5; s++) { %>
+                    <%if(s <= replies[i].movie_rating) {%>
+                        <span class="nstar on"></span>
+                    <% } else {%>
+                        <span class="nstar"></span>
+                    <% } %>
                 <% } %>
             </div>
+            <div id="date">
+                <%= replies[i].modify_date?replies[i].modify_date:replies[i].insert_date%>
+            </div>
+            <div id="name">
+                <%= replies[i].user_id%>
+            </div>
+            <div id="contents">
+                <%= replies[i].reply_contents %>
+            </div>
+            <% if(session && session.isLogin && (session.userSeq === replies[i].user_seq)) {%>
+            <div id="buttons">
+                <button class="btn btn-danger" onclick="OnDeleteReply(<%=replies[i].movie_reply_seq%>)">삭제</button>
+            </div>
+            <% } %>
+        </div>
         <% } %>
     </div>
 
     <% if(session && session.isLogin) {%>
-        <div class="review-form">
-            <div id="top">
-                <div class="star-box">
-                    <span class="star"></span>
+    <div class="review-form">
+        <div id="top">
+            <div class="star-box">
+                <span class="star"></span>
 
-                    <span class="star"></span>
+                <span class="star"></span>
 
-                    <span class="star"></span>
+                <span class="star"></span>
 
-                    <span class="star"></span>
+                <span class="star"></span>
 
-                    <span class="star"></span>
-                </div>
-            </div>
-            <div id="bottom">
-                <textarea class="review-text"></textarea>
-                <button class="review-add-btn" id="btn-reply-del" type="button" onclick="OnAddReview()">등록</button>
+                <span class="star"></span>
             </div>
         </div>
+        <div id="bottom">
+            <textarea class="review-text"></textarea>
+            <button class="review-add-btn" id="btn-reply-del" type="button" onclick="OnAddReview()">등록</button>
+        </div>
+    </div>
     <% } %>
 </div>
 <script>
-    var rating = 0;
-    <% if(session && session.isLogin) {%>
-        var userSeq = <%= session.userSeq %>;
+    function OnRentMovie(movie_seq) {
+        if ( <%= session && session.userSeq ? false : true %> ) {
+            alert('유저정보가 없습니다.');
+            return false;
+        }
+
+        $.ajax({
+                url: '/movie/rent_movie',
+                method: 'POST',
+                data: {
+                    movieSeq: movie_seq
+                }
+            })
+            .done(function (res) {
+                if (res.result === 'success') {
+                    alert('대여 성공');
+                    location.reload();
+                }
+                else if (res.result === 'nouser') {
+                    alert('대여 실패: 서버에 유저 정보가 없습니다.');
+                }
+                else if (res.result === 'overlap') {
+                    alert('대여 실패: 이미 대여하였습니다.');
+                } 
+                else {
+                    alert('대여 실패:' + res.result);
+                }
+            })
+            .fail(function (err) {
+                alert('Error : ' + err.error);
+            });
+    };
+
+    function OnCancelMovie(movie_seq) {
+        if ( <%= session && session.userSeq ? false : true %> ) {
+            alert('유저정보가 없습니다.');
+            return false;
+        }
+
+        $.ajax({
+                url: '/movie/cancel_movie',
+                method: 'POST',
+                data: {
+                    movieSeq: movie_seq
+                }
+            })
+            .done(function (res) {
+                if (res.result === 'success') {
+                    alert('반납 성공');
+                    location.reload();
+                } else if (res.result === 'nouser') {
+                    alert('반납 실패: 서버에 유저 정보가 없습니다.');
+                } else if (res.result === 'empty') {
+                    alert('반납 실패: 대여상태가 아닙니다.');
+                } else {
+                    alert('반납 실패:' + res.result);
+                }
+            })
+            .fail(function (err) {
+                alert('Error : ' + err.error);
+            });
+    };
+</script>
+
+
+<script>
+    var rating = 0; <%if (session && session.isLogin) { %>
+        var userSeq = <%= session.userSeq %> ;
         var userID = '<%= session.userID %>';
         var userName = '<%= session.userName %>';
-        var isAdmin = '<%= session.isAdmin %>';
-    <% } %>
+        var isAdmin = '<%= session.isAdmin %>'; 
+        <% } %>
 
-    
+
     $(".star").on('click', function () {
         var idx = $(this).index();
         $(".star").removeClass("on");
@@ -98,172 +172,74 @@
         }
         rating = i;
     });
-    
-    function OnRentMovie(movie_seq)
-    {
-        if(<%= session && session.userSeq?false:true %>) 
-        {
+
+
+    function OnDeleteReply(movie_reply_seq) {
+        if ( <%= session && session.userSeq ? false : true %> ) {
             alert('유저정보가 없습니다.');
             return false;
         }
-        
+
         $.ajax({
-            url:'/movie/rent_movie',
-            method:'POST',
-            data:
-            {
-                movieSeq: movie_seq
-            }
-        })
-        .done(function(res){
-            if(res.result === 'success')
-            {
-                alert('대여 성공');
-                location.reload();   
-            }
-            else if(res.result === 'nouser')
-            {
-                alert('대여 실패: 서버에 유저 정보가 없습니다.');
-            }
-            else if(res.result === 'overlap')
-            {
-                alert('대여 실패: 이미 대여하였습니다.');
-            }
-            {
-                alert('대여 실패:'+res.result);
-            }
-        })
-        .fail(function(err){
-            alert('Error : '+ err.error);
-        });
+                url: '/movie/delete_reply',
+                method: 'POST',
+                data: {
+                    movieReplySeq: movie_reply_seq
+                }
+            })
+            .done(function (res) {
+                if (res.result === 'success') {
+                    alert('삭제 성공');
+                    location.reload();
+                } else if (res.result === 'nouser') {
+                    alert('삭제 실패: 서버에 유저 정보가 없습니다.');
+                } else {
+                    alert('삭제 실패:' + res.result);
+                }
+            })
+            .fail(function (err) {
+                alert('Error : ' + err.error);
+            });
     };
 
-    function OnCancelMovie(movie_seq)
-    {
-        alert('test');
-        if(<%= session && session.userSeq?false:true %>) 
-        {
-            alert('유저정보가 없습니다.');
-            return false;
-        }
-        
-        $.ajax({
-            url:'/movie/cancel_movie',
-            method:'POST',
-            data:
-            {
-                movieSeq: movie_seq
-            }
-        })
-        .done(function(res){
-            if(res.result === 'success')
-            {
-                alert('반납 성공');
-                location.reload();   
-            }
-            else if(res.result === 'nouser')
-            {
-                alert('반납 실패: 서버에 유저 정보가 없습니다.');
-            }
-            else if(res.result === 'empty')
-            {
-                alert('반납 실패: 대여상태가 아닙니다.');
-            }
-            else
-            {
-                alert('반납 실패:'+res.result);
-            }
-        })
-        .fail(function(err){
-            alert('Error : '+ err.error);
-        });
-    };
-
-    function OnDeleteReply(movie_reply_seq)
-    {
-        if(<%= session && session.userSeq?false:true %>) 
-        {
-            alert('유저정보가 없습니다.');
-            return false;
-        }
-        
-        $.ajax({
-            url:'/movie/delete_reply',
-            method:'POST',
-            data:
-            {
-                movieReplySeq: movie_reply_seq
-            }
-        })
-        .done(function(res){
-            if(res.result === 'success')
-            {
-                alert('삭제 성공');
-                location.reload();   
-            }
-            else if(res.result === 'nouser')
-            {
-                alert('삭제 실패: 서버에 유저 정보가 없습니다.');
-            }
-            else
-            {
-                alert('삭제 실패:'+res.result);
-            }
-        })
-        .fail(function(err){
-            alert('Error : '+ err.error);
-        });
-    };
-    
-    function OnAddReview()
-    {
-        if(<%= movie.movie_seq?false:true%>)
-        {
+    function OnAddReview() {
+        if ( <%= movie.movie_seq ? false : true %> ) {
             alert('영화정보가 없습니다.');
             return false;
         }
-        if(<%=session.userSeq?false:true%>)
-        {
+        if ( <%= session.userSeq ? false : true %> ) {
             alert('유저정보가 없습니다.');
             return false;
         }
         var contents = $('.review-text').val();
-        if(!contents)
-        {
+        if (!contents) {
             alert('내용이 없습니다.');
             return false;
         }
 
         $.ajax({
-            url: '/movie/add_reply',
-            method: 'POST',
-            data:
-            {
-                movieSeq: <%= movie.movie_seq %>,
-                movieRating: rating,
-                replyContents: contents
-            },
-       })
-       .done(
-            function(res)
-            {
-                if(res.result === 'success')
-                {
-                    alert('등록 성공');
-                    location.reload();   
-                }
-                else
-                {
-                    alert('등록 실패:' + res.result);
-                }
-                
-        })
-       .fail(
-        function(err)
-        {
-                alert('Error : '+ err.error);
-        });
-        
+                url: '/movie/add_reply',
+                method: 'POST',
+                data: {
+                    movieSeq: <%= movie.movie_seq %>,
+                    movieRating: rating,
+                    replyContents: contents
+                },
+            })
+            .done(
+                function (res) {
+                    if (res.result === 'success') {
+                        alert('등록 성공');
+                        location.reload();
+                    } else {
+                        alert('등록 실패:' + res.result);
+                    }
+
+                })
+            .fail(
+                function (err) {
+                    alert('Error : ' + err.error);
+                });
     };
 </script>
 <%- include ('./common/footer'); -%>
