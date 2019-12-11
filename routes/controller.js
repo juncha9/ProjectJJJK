@@ -61,17 +61,14 @@ module.exports = function(app)
       //db.query("select * from movie_info where release_date = 2019 order by user_rating desc limit 0,5;", function(err, result){
       let func = async function(){
          try{
-            await db.query("select * from movie_info where release_date = 2019 and delete_yn = 'N' order by streaming_cnt desc limit 0,5;", function(err, result){
-               if(err){
-                  console.log(err);
-                  res.send(err);
-               }else{
-                  console.log(result);
-                  res.send(result);
-               }
-            });
-         }catch(exception){
-            console.log(exception);
+            [records,fields] = await db.query("select * from movie_info where release_date = 2019 and delete_yn = 'N' order by streaming_cnt desc limit 0,5;");
+            //console.log(result);
+            res.send(records);
+         }
+         catch(err)
+         {
+            console.log(err);
+            res.send(err);
          }
       }();
    });
@@ -86,17 +83,13 @@ module.exports = function(app)
    app.get("/movie/getLatestMovieList",(req,res) => {
       let func = async function(){
          try{
-            await db.query("select * from movie_info where movie_seq in(13,57,69,67,70);", function(err, result){
-               if(err){
-                  console.log(err);
-                  res.send(err);
-               }else{
-                  console.log(result);
-                  res.send(result);
-               }
-            });
-         }catch(exception){
-            console.log(exception);
+            [records, fields]  = await db.query("select * from movie_info where movie_seq in(13,57,69,67,70);");
+            res.send(records);
+         }
+         catch(err)
+         {
+            console.log(err);
+            res.send(err);
          }
       }();
    });
@@ -137,7 +130,7 @@ module.exports = function(app)
    app.get("/hidden/insertMovie", (req,res) => {
       let fn = async function(){
          try{
-            await db.query("insert into movie_info(movie_name, movie_director, release_date, image_url, user_rating, insert_date) values (?,?,?,?,?,sysdate());",
+            [result] = await db.query("insert into movie_info(movie_name, movie_director, release_date, image_url, user_rating, insert_date) values (?,?,?,?,?,sysdate());",
             [((req.query.title).replace("<b>","")).replace("</b>",""), req.query.director, req.query.pubDate, req.query.image, req.query.userRating]);
          }catch(err){
             console.log(err);
@@ -163,42 +156,43 @@ module.exports = function(app)
       //console.log(req.body.movieSeq);
       //디비에서 해당 seq 영화정보 가져오기
       let func = async function(){
-         await db.query("select * from movie_info where movie_seq = "+req.body.movieSeq+";", function(err, result){
-            if(err){
-               console.log(err);
-               //res.send(err);
-               res.redirect("/");
-            }else{
-               //console.log(result);
-               //console.log(replies);
-               //console.log(replies.length);
-               res.render("movieView", {
-                  movieSeq:      result[0].movie_seq,
-                  movieImage:    result[0].image_url,
-                  movieTitle:    result[0].movie_title,
-                  movieDirector: result[0].movie_director,
-                  movieDesc:     result[0].movie_desc,
-                  userRating:    result[0].user_rating,
-                  releaseDate:   result[0].release_date,
-                  streamingCnt:  result[0].streaming_cnt
-               });
-            }
-         });
+         try
+         {
+            [records,fields] = await db.query("select * from movie_info where movie_seq = "+req.body.movieSeq+";");
+            res.render("movieView", {
+               movieSeq:      records[0].movie_seq,
+               movieImage:    records[0].image_url,
+               movieTitle:    records[0].movie_title,
+               movieDirector: records[0].movie_director,
+               movieDesc:     records[0].movie_desc,
+               userRating:    records[0].user_rating,
+               releaseDate:   records[0].release_date,
+               streamingCnt:  records[0].streaming_cnt
+            });
+         }
+         catch(err)
+         {
+            console.log(err);
+            //res.send(err);
+            res.redirect("/");
+         }
       }();
    });
 
    app.get("/movie/getMovieReplyList",(req,res) => {
       let func = async function(){
-         await db.query("select * from movie_reply_info where movie_seq = "+req.query.movieSeq+";", function(err, result){
-            if(err){
-               console.log(err);
-               //res.send(err);
-               res.redirect("/");
-            }else{
-               console.log(result);
-               res.send(result);
-            }
-         });
+         try
+         {
+            [records,fields] = await db.query("select * from movie_reply_info where movie_seq = "+req.query.movieSeq+";");
+            console.log(records);
+            res.send(records);
+         }
+         catch(err)
+         {
+            console.log(err);
+            //res.send(err);
+            res.redirect("/");
+         }
       }();
    });
 
@@ -210,26 +204,28 @@ module.exports = function(app)
       //console.log(req.body.movieSeq);
       //디비에서 해당 seq 영화정보 가져오기
       let func = async function(){
-         await db.query("select * from movie_info where movie_seq = "+req.body.movieSeq+";", function(err, result){
-            if(err){
-               console.log(err);
-               //res.send(err);
-               res.redirect("/");
-            }else{
-               //console.log(result);
+         try
+         {
+            [records, fields] = await db.query("select * from movie_info where movie_seq = "+req.body.movieSeq+";");
+            //console.log(result);
                //console.log(replies);
                //console.log(replies.length);
-               res.render("movie_detail", {
-                  movieImage:    result[0].image_url,
-                  movieTitle:    result[0].movie_title,
-                  movieDirector: result[0].movie_director,
-                  movieDesc:     result[0].movie_desc,
-                  userRating:    result[0].user_rating,
-                  releaseDate:   result[0].release_date,
-                  streamingCnt:  result[0].streaming_cnt
-               });
-            }
-         });
+            res.render("movie_detail", {
+               movieImage:    result[0].image_url,
+               movieTitle:    result[0].movie_title,
+               movieDirector: result[0].movie_director,
+               movieDesc:     result[0].movie_desc,
+               userRating:    result[0].user_rating,
+               releaseDate:   result[0].release_date,
+               streamingCnt:  result[0].streaming_cnt
+            });
+         }
+         catch(err)
+         {
+            console.log(err);
+            //res.send(err);
+            res.redirect("/");
+         }
       }();
    });
 
