@@ -23,7 +23,6 @@ router.get("/list",(req,res)=>
 
             //보여줄 항목의 갯수
             const listCount = 10;
-            
             [records,fields] = await db.query('SELECT count(*) as count FROM movie_info');
             if(!(records && records[0]))
             {
@@ -33,13 +32,15 @@ router.get("/list",(req,res)=>
                 return;
             }
             let totalCount = records[0].count;
+            if(totalCount <= 0 )
+            {
+                totalCount = 1;
+            }
             let totalPage = parseInt(totalCount/listCount); //페이지 갯수
-            
             if(totalCount % listCount > 0 )
             {
                 totalPage++;
             }
-
             //페이지 계산
             const pageCount = 10; //보여줄 페이지 갯수
             if(page > totalPage)
@@ -121,13 +122,16 @@ router.get('/library',(req,res)=>
                 return;
             }
             let totalCount = records[0].count;
+            if(totalCount <= 0 )
+            {
+                totalCount = 1;
+            }
             let totalPage = parseInt(totalCount/listCount); //페이지 갯수
 
             if(totalCount % listCount > 0 )
             {
                 totalPage++;
             }
-
             //페이지 계산
             const pageCount = 10; //보여줄 페이지 갯수
             if(page > totalPage)
@@ -140,10 +144,8 @@ router.get('/library',(req,res)=>
             {
                 endPage = totalPage;
             }
-
             console.log('page:'+page+'totalPage:'+totalPage+'totalCount:'+totalCount+'startPage:'+startPage+'endPage:'+endPage);
             //페이지 계산
-
             //페이지 관련 전처리
             sql = "SELECT * FROM DB.user_library L "+
             "INNER JOIN DB.user_info U ON L.user_seq=U.user_seq "+
@@ -217,7 +219,6 @@ router.get('/detail',(req,res)=>
             //에러발생시는 여기로
             console.error(err);
             res.render('error',{error:err});
-            
         }
     }();//마지막에 ()를 추가함으로 fn()을 실행
 });
