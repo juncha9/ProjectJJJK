@@ -1,88 +1,99 @@
 <%- include ('./common/header'); -%>
 <%- include ('./common/topMenu'); -%>
 <link rel='stylesheet' href='/stylesheets/board.css' />
-<br><br><br>
-<h1><%= title %></h1>
-<br><br>
-<a href="/board/page/1"><button>Back</button></a>
-<br><br>
-
-<form action="/board/update" method="post">
+<div class="boardContainer">
+    <div class="page-head"><%= title %></div>
+    <div class="top-btn">
+        <a href="/board/page/1"><button id="btn">Back</button></a>
+    </div>
     <table>
-        <input type="hidden" name="user_seq" value="<%=row.user_seq%>" />
-        <input type="hidden" name="board_seq" value="<%=row.board_seq%>" />
-        <tr>
-            <td>작성자</td>
-            <td><input type="text" name="board_writer" disabled="disabled" id="board_writer" value="<%=row.board_writer%>" required /></td>
-        </tr>
-        <tr>
-            <td>제목</td>
-            <td><input type="text" name="board_title" id="board_title" value="<%=row.board_title%>" required /></td>
-        </tr>
+        <form action="/board/update" method="post">
+
+            <input type="hidden" name="user_seq" value="<%=row.user_seq%>" />
+            <input type="hidden" name="board_seq" value="<%=row.board_seq%>" />
+            <tr>
+                <td>작성자</td>
+                <td><input type="text" name="board_writer" disabled="disabled" id="board_writer"
+                        value="<%=row.board_writer%>" required /></td>
+            </tr>
+            <tr>
+                <td>제목</td>
+                <td><input type="text" name="board_title" id="board_title" value="<%=row.board_title%>" required /></td>
+            </tr>
+            <tr>
+                <td>내용</td>
+                <td><textarea name="board_contents" id="board_contents" style="width:80%;" rows="10"
+                        required><%=row.board_contents%></textarea></td>
+            </tr>
+            <tr>
+                <td>변경일</td>
+                <td><%=row.modify_date%></td>
+            </tr>
+            <tr>
+                <td>등록일</td>
+                <td><%=row.insert_date%></td>
+            </tr>
+
+            <br>
+            <tr>
+                <td colspan="2">
+                    <!-- 로그인 유저와 게시글 작성 유저 정보를 비교하여 자신이 로그인 했을때만 update,delete 버튼 표시 -->
+                    <% if(session && session.isLogin && login_user == user_info[0].user_seq) { %>
+                    <!-- 자신이 로그인 했을때만 버튼 표시 -->
+                    <button id="btn" type="submit">Update</button>
+                    <button id="btn" type="submit" formaction="/board/delete">Delete</button>
+                    <% } %>
+                </td>
+            </tr>
+        </form>
+    </table>
+    <br><br><br>
+    <h2>댓글작성</h2>
+
+    <table border="3">
+        <% if(session && session.isLogin) { %>
+        <!-- 로그인 상태 확인해서 버튼 표시-->
+        <form action="/board/reply_write" method="post">
+
+            <input type="hidden" name="board_seq" value="<%=row.board_seq%>" />
+            <input type="hidden" name="board_reply_seq" value="<%=row.board_reply_seq%>" />
+            <tr>
+                <td>내용</td>
+                <td>
+                    <textarea name="board_reply_contents" id="board_reply_contents" style="width:80%;" rows="3"
+                        placeholder="댓글을 달아주세요." required><%=row.board_reply_contents%></textarea>
+                        <button id="btn" type="submit">Submit</button>
+                </td>
+
+                
+            </tr>
+        </form>
+        <% } else{ %>
         <tr>
             <td>내용</td>
-            <td><textarea name="board_contents" id="board_contents" style="width:80%;" rows="10" required><%=row.board_contents%></textarea></td>
+            <td>
+                <textarea name="board_reply_contents" disabled="disabled" id="board_reply_contents" style="width:80%;"
+                    rows="3" placeholder="댓글 작성을 하려면 로그인이 필요합니다." required><%=row.board_reply_contents%>
+                </textarea>
+            </td>
         </tr>
-        <tr>
-            <td>변경일</td>
-            <td><%=row.modify_date%></td>
-        </tr>
-        <tr>
-            <td>등록일</td>
-            <td><%=row.insert_date%></td>
-        </tr>
+        <% } %>
     </table>
-    <br>
-    <tr>
-        <td colspan="2">
-            <!-- 로그인 유저와 게시글 작성 유저 정보를 비교하여 자신이 로그인 했을때만 update,delete 버튼 표시 -->
-            <% if(session && session.isLogin && login_user == user_info[0].user_seq) { %> <!-- 자신이 로그인 했을때만 버튼 표시 -->
-                <button type="submit">Update</button>
-                <button type="submit" formaction="/board/delete">Delete</button>
-            <% } %>
-        </td>
-    </tr>
-</form>
 
-<br><br><br>
-<h2>댓글작성</h2>
+    <br><br><br>
+    <h2>댓글</h2>
 
-<div>
-    <% if(session && session.isLogin) { %>  <!-- 로그인 상태 확인해서 버튼 표시-->
-        <form action="/board/reply_write" method="post">
-            <table border="3">
-                <input type="hidden" name="board_seq" value="<%=row.board_seq%>" />
-                <input type="hidden" name="board_reply_seq" value="<%=row.board_reply_seq%>" />
-                <tr>
-                    <td>내용</td> 
-                    <td><textarea name="board_reply_contents" id="board_reply_contents" style="width:80%;" rows="3" placeholder="댓글을 달아주세요." required><%=row.board_reply_contents%></textarea>
-                        <button type="submit">Submit</button></td>
-                </tr>   
-            </table>
-        </form>
-    <% } else{ %>
-        <table border="3">
-            <tr>
-                <td>내용</td> 
-                <td><textarea name="board_reply_contents" disabled="disabled" id="board_reply_contents" style="width:80%;" rows="3" placeholder="댓글 작성을 하려면 로그인이 필요합니다." required><%=row.board_reply_contents%></textarea>
-            </tr>   
-        </table>
-    <% } %>
-</div>
-
-<br><br><br>
-<h2>댓글</h2>
-
-<%
-for(var i=0; i<rrows.length; i++) {
-    var data = rrows[i]
-%>
+    <%
+    for(var i=0; i<rrows.length; i++) {
+        var data = rrows[i]
+    %>
     <table border="3">
         <tr>
             <td>[ <%=data.board_reply_writer%> ] &nbsp&nbsp <%=data.insert_date%> <a href="#">[삭제]</a>
                 <br><br><%=data.board_reply_contents%></td>
         </tr>
     </table>
-    <br>  
-<%}%>
+    <br>
+    <%}%>
+</div>
 <%- include ('./common/footer'); -%>

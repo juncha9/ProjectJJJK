@@ -1,19 +1,17 @@
 <%- include ('./common/header'); -%>
 <%- include ('./common/topMenu'); -%>
 <link rel='stylesheet' href='/stylesheets/board.css' />
-<br><br><br>
-<h1><%= title %></h1>
-<br><br>
-<tr>
-    <td>
-        <br>
-        <a href="/board/page/1"><button>Back</button></a>
-        <br><br>
-    </td>
-</tr>
+<div class="boardContainer">
+    <div class="page-head"><%= title %></div>
 
-<form action="/board/write" method="post">
+    <div class="top-btn">
+        <a href="/board/page/1"><button id="btn">Back</button></a>
+    </div>
+    
     <table>
+    
+    <form action="/board/write" method="post">
+    
         <tr>
             <td>제목</td>
             <td><input type="text" name="board_title" id="board_title" required /></td>
@@ -22,12 +20,13 @@
             <td>내용</td>
             <td><textarea name="board_contents" id="board_contents" style="width:80%;" rows="10" required></textarea></td>
         </tr>
+        <br>
+        <tr>
+            <td colspan="2">
+                <button  id="btn" type="submit">Submit</button>
+            </td>
+        </tr>
+    </form>
     </table>
-    <br>
-    <tr>
-        <td colspan="2">
-            <button type="submit">Submit</button>
-        </td>
-    </tr>
-</form>
+</div>
 <%- include ('./common/footer'); -%>
