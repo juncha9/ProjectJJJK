@@ -1,0 +1,51 @@
+﻿<%- include ('./common/header'); -%>
+<%- include ('./common/topMenu'); -%>
+
+<link rel='stylesheet' href='/stylesheets/board_style.css' />
+<br><br><br>
+<h1><%= title %></h1>
+<br><br>
+<% if(session && session.isLogin) { %>
+<!-- 로그인 상태 확인해서 버튼 표시-->
+<a href="/board/write"><button>NEW</button></a>
+<% } %>
+<br><br>
+<table>
+    <tr align="center">
+        <th>번호</th>
+        <th>작성자</th>
+        <th>제목</th>
+        <th>수정일</th>
+        <th>등록일</th>
+    </tr>
+    <%
+for(var i = (page * page_num) - page_num; i < (page * page_num); i++) {
+    if(i > length){
+        i++;
+    }else{
+    var data = rows[i]
+%>
+    <tr>
+        <td align="center"><%= i + 1 %></td>
+        <td align="center"><%= data.board_writer %></td>
+        <td align="center"><a href="/board/read/<%= data.board_seq %>"><%= data.board_title %></a></td>
+        <td align="center"><%= data.modify_date %></td>
+        <td align="center"><%= data.insert_date %></td>
+    </tr>
+    <% }
+}
+%>
+</table>
+<tr>
+    <td colspan="6">
+        <%
+for(var j = 0; j < length / page_num; j++){
+%>
+        [<a href="/board/page/<%= j + 1 %>"><%= j + 1 %></a>]
+        <%
+}
+%>
+    </td>
+</tr>
+
+<%- include ('./common/footer'); -%>
