@@ -185,6 +185,7 @@
         z-index: 1;
         transform: none;
         font-weight:bold ;
+        background-color: #EEEEEE;
     }
 
     #contentsContainer{
