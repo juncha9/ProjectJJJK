@@ -23,7 +23,7 @@ const pool = mysql.createPool(
     user: private.mysqlInfo.user,
     password: private.mysqlInfo.password,
     database: private.mysqlInfo.database,
-    connectionLimit : 10,
+    connectionLimit : 100,
     connectTimeout : 2000,
 
 });
@@ -85,6 +85,7 @@ module.exports =
                 catch(err)
                 {
                     var errLog = 'DB ' + err 
+                    connect.release();
                     reject(errLog);
                 }
                 finally
@@ -92,7 +93,7 @@ module.exports =
                     if(connect != undefined)
                     {
                         connect.release();
-                        //console.log('DB connect end');
+                        console.log('DB connect end');
                     }
                 }
             }
