@@ -201,7 +201,7 @@ module.exports = function(app)
       }();
    });
 
-    //컨트롤러 분리
+   //컨트롤러 분리
    
    app.use('/auth',auth);
 

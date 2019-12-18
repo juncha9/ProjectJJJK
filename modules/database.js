@@ -46,6 +46,7 @@ module.exports =
             }
             else
             {
+                //매개변수가 너무 많거나 적을경우
                 if(arguments.length>1)
                 {
                     console.log('Query: ' + queryString +' ['+ placeHolder + ']');
@@ -54,11 +55,12 @@ module.exports =
                 {
                     console.log('Query : ' + queryString);
                 }
+
                 var connect;
                 try
                 {
                     var result;
-                    //console.log('Start DB connect');
+                    //DB 쿼리 시작
                     connect = await pool.getConnection(async conn => conn);
                     try
                     {
@@ -69,27 +71,28 @@ module.exports =
                         }
                         else if(arguments.length == 2)
                         {
-                            //with placeHolder
+                            //with place holder query
                             result = await connect.query(queryString,placeHolder);
                         }
                     }
                     catch(err)
                     {
+                        //on error rollback
                         connect.rollback();
                         console.log('Start rollback because on error');
                         throw err;
                     }
-                    //console.log('End DB connect');
+                    //DB 쿼리 성공
                     resolve(result);
                 }
                 catch(err)
                 {
                     var errLog = 'DB ' + err 
-                    connect.release();
                     reject(errLog);
                 }
                 finally
                 {
+                    //DB 접속 해제
                     if(connect != undefined)
                     {
                         connect.release();
