@@ -201,12 +201,12 @@ module.exports = function(app)
       }();
    });
 
-   //컨트롤러 분리
+   //컨트롤러 모듈별 분리
    
-   app.use('/auth',auth);
+   app.use('/auth',auth); //회원 관련
 
-   app.use('/movie',movie);
+   app.use('/movie',movie); //영화 관련
    
-   app.use('/board',board);
+   app.use('/board',board); //게시판 관련
 
 }

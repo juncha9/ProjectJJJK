@@ -8,10 +8,14 @@ router.get("/list",(req,res)=>
 {
     let fn = async function ()
     {
+        /*
+            영화리스트
+        */
+        
         try
         {
             //페이지 관련 부분 
-            let page;
+            let page; //현재페이지
             if(!req.query.page)
             {
                 page = 1;
@@ -31,12 +35,12 @@ router.get("/list",(req,res)=>
                 res.render('error',{error:err});
                 return;
             }
-            let totalCount = records[0].count;
+            let totalCount = records[0].count; //전체 항목의 갯수
             if(totalCount <= 0 )
             {
-                totalCount = 1;
+                totalCount = 1; 
             }
-            let totalPage = parseInt(totalCount/listCount); //페이지 갯수
+            let totalPage = parseInt(totalCount/listCount); //전체 페이지 갯수
             if(totalCount % listCount > 0 )
             {
                 totalPage++;
@@ -130,7 +134,7 @@ router.get('/library',(req,res)=>
 
             if(totalCount % listCount > 0 )
             {
-                totalPage++;
+                totalPage++; 
             }
             //페이지 계산
             const pageCount = 10; //보여줄 페이지 갯수
@@ -224,9 +228,10 @@ router.get('/detail',(req,res)=>
 });
 
 router.post('/add_reply',(req,res)=>{
+    //댓글 추가 
     let fn = async function()
     {
-        
+        //세션 정보, 영화정보, 댓글내용, 평점 읽어오기
         let userSeq = req.session.userSeq;
         let movieSeq = req.body.movieSeq;
         let replyContents = req.body.replyContents;
@@ -284,6 +289,9 @@ router.post('/delete_reply',(req,res)=>{
 });
 
 router.post('/rent_movie',(req,res)=>{
+    /*
+        영화 대여
+    */
     let fn = async function()
     {
         try
@@ -324,6 +332,9 @@ router.post('/rent_movie',(req,res)=>{
 });
 
 router.post('/cancel_movie',(req,res)=>{
+    /*
+        영화 반납
+    */
     let fn = async function()
     {
         let userSeq = req.session.userSeq;

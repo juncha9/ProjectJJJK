@@ -2,8 +2,13 @@ const db = require(__modules+'/database');
 const router = require('express').Router();
 router.get("/",(req,res)=>
 {
+    /*
+        회원 시스템
+        모드에 따라 분리
+    */
     if(req.query.mode === 'login')
     {
+        //로그인
         if(req.session.userSeq)
         {
             res.render('error',{error:'이미 로그인되어 있습니다.'});
@@ -14,6 +19,7 @@ router.get("/",(req,res)=>
     }
     else if(req.query.mode === 'register')
     {
+        //회원가입
         if(req.session.userSeq)
         {
             res.render('error',{error:'이미 로그인되어 있습니다.'});
@@ -23,6 +29,7 @@ router.get("/",(req,res)=>
     }
     else if(req.query.mode === 'update')
     {
+        //회원정보 수정
         let userSeq = req.session.userSeq;
         if(!userSeq)
         {
@@ -52,6 +59,7 @@ router.get("/",(req,res)=>
     }
     else if(req.query.mode === 'chpass')
     {
+        //비밀번호 변경
         let userSeq = req.session.userSeq;
         if(!userSeq)
         {
@@ -82,6 +90,7 @@ router.get("/",(req,res)=>
 
     else if(req.query.mode === 'logout')
     {
+        //로그아웃
         let fn = async function() 
         {
             try
@@ -107,6 +116,7 @@ router.get("/",(req,res)=>
     }
 });
 router.post("/login",(req,res)=>{
+    //로그인 전송 후 쿼리비교 시퀀스
     let fn = async function() 
     {
         try
@@ -123,6 +133,7 @@ router.post("/login",(req,res)=>{
             
             if(records && records.length > 0)
             {   
+                //로그인 성공시 세션 생성
                 req.session.userSeq = records[0].user_seq;
                 req.session.userID = records[0].user_id;
                 req.session.userName = records[0].user_name;
@@ -149,6 +160,7 @@ router.post("/login",(req,res)=>{
 })
 
 router.post("/check_id",(req,res)=>{
+    //아이디 중복검사
     let fn = async function()
     {
         let userID = req.body.userID;
@@ -174,6 +186,7 @@ router.post("/check_id",(req,res)=>{
 
 router.post("/register",(req,res)=>
 {
+    //회원가입 전송 시퀀스
     let fn = async function()
     {
         try
@@ -185,7 +198,7 @@ router.post("/register",(req,res)=>
             let userEmail = req.body.userEmail;
             if(!userID || !userPassword || !userName)
             {
-                let err = "로그인 실패 : 필요한 필드가 없습니다.";
+                let err = "회원가입 실패 : 필요한 필드가 없습니다.";
                 res.render('error',{error:err});
                 return;
             }
@@ -210,6 +223,7 @@ router.post("/register",(req,res)=>
 });
 
 router.post("/update",(req,res)=>{
+    //회원정보 수정 시퀀스
     let userSeq = req.session.userSeq;
     let curPassword = req.body.curPassword;
     let userName = req.body.userName;
@@ -247,6 +261,7 @@ router.post("/update",(req,res)=>{
 });
 
 router.post("/chpass",(req,res)=>{
+    //비밀번호 변경 시퀀스
     let userSeq = req.session.userSeq;
     let curPassword = req.body.curPassword;
     let userPassword = req.body.userPassword;
